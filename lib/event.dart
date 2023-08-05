@@ -4,11 +4,44 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-class AppEvent {
-  void writeTo(String text) async {
-    final Directory directory = await getApplicationDocumentsDirectory();
-    final File file = File('${directory.path}/testlog.txt');
-    await file.writeAsString("$text\n", mode: FileMode.append);
+class AppEvent implements Comparable<AppEvent>{
+  String? id;
+  String type;
+  Map<dynamic, dynamic> data;
+
+  AppEvent({required this.type, required this.data, this.id});
+
+  @override
+  String toString() {
+    return 'Event($id, $type, $data)';
+  }
+
+  Map<String, dynamic> toEventMap() => {
+    'id': id,
+    'type': type,
+    'data': data,
+  };
+
+  factory AppEvent.fromEventMap(Map<dynamic, dynamic> eventMap) {
+    if (eventMap['type'] == null) {
+      throw Exception('Cannot create an OrbEvent with an empty \'type\'.');
+    }
+    return AppEvent(
+      id: eventMap['id'],
+      type: eventMap['type'],
+      data: eventMap['data'],
+    );
+  }
+
+  factory AppEvent.textMessage(String text, bool isCurrentUser) {
+    print("e");
+    return AppEvent(
+      type: 'nativegpt.event.textMessage',
+      data: {
+        'text': text,
+        'user': isCurrentUser
+      }
+    );
   }
 
   bool checkSender(word) {
@@ -19,13 +52,12 @@ class AppEvent {
     }
   }
 
+  @override
+  int compareTo(AppEvent other) {
+    // TODO: implement compareTo
+    throw UnimplementedError();
+  }
+
 }
 
-class Message {
-  const Message({
-    required this.text,
-    required this.isCurrentUser,
-  });
-  final String text;
-  final bool isCurrentUser;
-}
+

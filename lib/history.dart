@@ -8,3 +8,7 @@ class Message {
   final String text;
   final bool isCurrentUser;
 }
+
+class ChatHistory{
+
+}

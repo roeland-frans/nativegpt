@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testtextapp/event.dart';
+import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/chat.dart';
 
 
@@ -28,14 +29,6 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var texts = [];
   var sender = [];
-  final AppEvent appEv = AppEvent();
-
-
-  void newTexts(message){
-    texts.add(message);
-    appEv.writeTo(message.text);
-    notifyListeners();
-  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -111,12 +104,8 @@ class MainPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         const Text(
-          'You have pushed the button this many times:',
+          'Placeholder',
         ),
-        Text(
-          'boop',
-          style: Theme.of(context).textTheme.headlineMedium,
-        )
       ],
     );
   }
@@ -151,11 +140,8 @@ class MessagePage extends StatelessWidget{
             ElevatedButton(
               style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.amber)),
               onPressed: () {
-                Message message = Message(text: myController.text, isCurrentUser: true);
-                appState.newTexts(message);
-                print(appState.texts);
-                Message respmessage = Message(text: "respond", isCurrentUser: false);
-                appState.newTexts(respmessage);
+                AppEvent message = AppEvent.textMessage(myController.text, true);
+                AppEvent rpmessage = AppEvent.textMessage("respond", false);
               },
               child: Text('Send'),
             ),
@@ -173,7 +159,6 @@ class MessageFeed extends StatefulWidget{
 
 class _MessageFeedState extends State<MessageFeed> {
   // look into block
-  final AppEvent appEv = AppEvent();
   // final ScrollController _scrollController = ScrollController();
   final ScrollController _controller = ScrollController();
 
@@ -197,10 +182,10 @@ class _MessageFeedState extends State<MessageFeed> {
           // controller: _scrollController,
           controller: _controller,
           children: [
-            for (Message pair in appState.texts)
+            for (String pair in appState.texts)
               ChatBubble(
-                text: pair.text,
-                isCurrentUser: pair.isCurrentUser,
+                text: "pair.text",
+                isCurrentUser: true,
               ),
             // _scrollDown(),
 
