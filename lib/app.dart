@@ -1,3 +1,4 @@
+
 import 'package:testtextapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,6 +41,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   var selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -114,10 +116,10 @@ class MainPage extends StatelessWidget {
 class MessagePage extends StatelessWidget{
 
   final myController = TextEditingController();
+  var eventStream = EventStream();
+
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -128,7 +130,6 @@ class MessagePage extends StatelessWidget{
           children: [
             Flexible(
               child: TextField(
-                // style: TextStyle(fontSize: 40.0, height: 2.0, color: Colors.black),
                 controller: myController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -141,6 +142,8 @@ class MessagePage extends StatelessWidget{
               style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.amber)),
               onPressed: () {
                 AppEvent message = AppEvent.textMessage(myController.text, true);
+                print(message.type);
+                eventStream.addEvent(message);
                 AppEvent rpmessage = AppEvent.textMessage("respond", false);
               },
               child: Text('Send'),
@@ -161,6 +164,7 @@ class _MessageFeedState extends State<MessageFeed> {
   // look into block
   // final ScrollController _scrollController = ScrollController();
   final ScrollController _controller = ScrollController();
+  var eventStream = EventStream();
 
   void _scrollDown() {
     _controller.jumpTo(_controller.position.maxScrollExtent);
@@ -168,8 +172,7 @@ class _MessageFeedState extends State<MessageFeed> {
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-    if (appState.texts.isEmpty) {
+    if (eventStream.events.isEmpty) {
       return Row(
         children: [
           Text('No messages yet.'),
@@ -182,10 +185,10 @@ class _MessageFeedState extends State<MessageFeed> {
           // controller: _scrollController,
           controller: _controller,
           children: [
-            for (String pair in appState.texts)
+            for (AppEvent pair in eventStream.events)
               ChatBubble(
-                text: "pair.text",
-                isCurrentUser: true,
+                text: pair.data['text'],
+                isCurrentUser: pair.data['user'],
               ),
             // _scrollDown(),
 

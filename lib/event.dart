@@ -34,7 +34,6 @@ class AppEvent implements Comparable<AppEvent>{
   }
 
   factory AppEvent.textMessage(String text, bool isCurrentUser) {
-    print("e");
     return AppEvent(
       type: 'nativegpt.event.textMessage',
       data: {
