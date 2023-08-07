@@ -161,7 +161,6 @@ class MessageFeed extends StatefulWidget{
 }
 
 class _MessageFeedState extends State<MessageFeed> {
-  // look into block
   // final ScrollController _scrollController = ScrollController();
   final ScrollController _controller = ScrollController();
   var eventStream = EventStream();
