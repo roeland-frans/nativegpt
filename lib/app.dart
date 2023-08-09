@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testtextapp/event.dart';
-import 'package:testtextapp/history.dart';
+import 'package:testtextapp/ui/history.dart';
 
 import 'package:testtextapp/event_stream.dart';
-import 'package:testtextapp/ui/chat.dart';
+import 'package:testtextapp/ui/card/text.dart';
 
 
 class MyApp extends StatelessWidget {

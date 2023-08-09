@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:testtextapp/main.dart';
-import 'package:testtextapp/app.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
@@ -40,5 +38,4 @@ class ChatBubble extends StatelessWidget {
       ),
     );
   }
-
 }
