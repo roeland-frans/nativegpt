@@ -6,6 +6,7 @@ class AppThemeData {
   static Color themeColorMain = Colors.white;
   static Color themeColorSecondary = Colors.indigo;
   static Color themeColorAccent = Colors.indigoAccent;
+  static Color themeColorBase = Colors.grey;
 
   void themeChange() {
     themeColorMain = Colors.blue;
@@ -16,19 +17,34 @@ class AppThemeData {
 class AppTheme extends StatelessWidget{
   final Color themeColorMain;
   final Color themeColorSecondary;
-  AppTheme({required this.themeColorMain, required this.themeColorSecondary});
+  final Color themeColorAccent;
+  final Color themeColorBase;
+  AppTheme({
+    required this.themeColorMain,
+    required this.themeColorSecondary,
+    required this.themeColorAccent,
+    required this.themeColorBase});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'NativeGPT',
       theme: ThemeData(
-
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               foregroundColor: themeColorMain,
             )),
         textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorSecondary),
+        appBarTheme: AppBarTheme(
+            color: themeColorMain,
+            iconTheme: IconThemeData(
+              color: themeColorBase
+            ),
+            titleTextStyle: TextStyle(
+              color: themeColorBase,
+              fontWeight: FontWeight.bold,
+              fontSize: 18
+            )),
         indicatorColor: themeColorSecondary,
         highlightColor: themeColorSecondary,
         navigationRailTheme: NavigationRailThemeData(
@@ -44,8 +60,7 @@ class AppTheme extends StatelessWidget{
           bodyMedium: TextStyle(color: Colors.black),
           bodyLarge: TextStyle(color: Colors.black),
           bodySmall: TextStyle(color: Colors.black),
-        ),
-      ),
+        )),
       home: MyHomePage(),
     );
   }
