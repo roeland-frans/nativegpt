@@ -57,7 +57,7 @@ class _MessagePageState extends State<MessagePage> {
                   widget.eventStream.addEvent(rpmessage);
                   setState(() {});
                 },
-                child: Text('Send', selectionColor: Colors.black38,),
+                child: Text('Send',),
               ),
             ],
           ),

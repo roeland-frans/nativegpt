@@ -23,7 +23,8 @@ class ChatBubble extends StatelessWidget {
         child: DecoratedBox(
           // chat bubble decoration
           decoration: BoxDecoration(
-            color: isCurrentUser ? Colors.grey[300] : Colors.grey[400],
+            border: Border.all(color: isCurrentUser ? Colors.grey : Colors.indigoAccent, width: 2),
+            color: isCurrentUser ? Colors.white : Colors.indigo[200],
           ),
           child: Padding(
             padding: const EdgeInsets.all(12),
