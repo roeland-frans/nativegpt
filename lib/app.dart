@@ -16,12 +16,22 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(), // IMPORTANT
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'NativeGPT',
         theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
+          // useMaterial3: true,
+          highlightColor: Colors.black,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white,
+              )),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
+          textTheme: TextTheme(
+            bodyMedium: TextStyle(color: Colors.black),
+            bodyLarge: TextStyle(color: Colors.black),
+            bodySmall: TextStyle(color: Colors.black),
+          ),
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page',),
+        home: const MyHomePage(title: 'NativeGPT Home Page',),
       ),
     );
   }
@@ -68,12 +78,18 @@ class _MyHomePageState extends State<MyHomePage> {
               children: [
                 SafeArea(
                   child: NavigationRail(
-                    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+                    leading: Row(
+                      children: [
+                        const IconButton(icon: Icon(Icons.format_line_spacing), onPressed: null),
+                        const Text("NativeGPT"),
+                      ],
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.background,
                     extended: constraints.maxWidth >= 600,
                     destinations: [
                       NavigationRailDestination(
                         icon: Icon(Icons.message),
-                        label: Text('Messages'),
+                        label: Text('Conversations'),
                       ),
                       NavigationRailDestination(
                         icon: Icon(Icons.home),
@@ -92,6 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   ),
                 ),
+                const VerticalDivider(thickness: 2, width: 1, color: Colors.black38,),
                 Expanded(
                     child: Container(
                       child: page,

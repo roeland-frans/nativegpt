@@ -16,15 +16,19 @@ class ChatHistory extends StatelessWidget {
   Widget build(BuildContext context) {
     // var eventStream = context.watch<EventStream>();
     if (eventStream.events.isEmpty) {
-      return Row(
-          children: [
-            Text('No messages yet.'),
-          ]
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+            children: [
+              Text('No messages yet.'),
+            ]
+        ),
       );
     }
     return Flexible(
       child: Scaffold(
         body: ListView.builder(
+          reverse: true,
           controller: _controller,
           itemCount: eventStream.events.length,
           itemBuilder: (context, index) {
