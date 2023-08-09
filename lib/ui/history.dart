@@ -28,7 +28,6 @@ class ChatHistory extends StatelessWidget {
     return Flexible(
       child: Scaffold(
         body: ListView.builder(
-          reverse: true,
           controller: _controller,
           itemCount: eventStream.events.length,
           itemBuilder: (context, index) {
