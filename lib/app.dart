@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testtextapp/event.dart';
+import 'package:testtextapp/history.dart';
+
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/chat.dart';
 
@@ -113,8 +115,12 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class MessagePage extends StatelessWidget{
+class MessagePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _MessagePageState();
+}
 
+class _MessagePageState extends State<MessagePage> {
   final myController = TextEditingController();
   var eventStream = EventStream();
 
@@ -124,7 +130,7 @@ class MessagePage extends StatelessWidget{
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        MessageFeed(),
+        ChatHistory(eventStream: eventStream,),
         Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -142,8 +148,10 @@ class MessagePage extends StatelessWidget{
               style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.amber)),
               onPressed: () {
                 AppEvent message = AppEvent.textMessage(myController.text, true);
-                print(message.type);
                 eventStream.addEvent(message);
+                setState(() {
+
+                });
                 AppEvent rpmessage = AppEvent.textMessage("respond", false);
               },
               child: Text('Send'),
@@ -171,6 +179,7 @@ class _MessageFeedState extends State<MessageFeed> {
 
   @override
   Widget build(BuildContext context) {
+    // var eventStream = context.watch<EventStream>();
     if (eventStream.events.isEmpty) {
       return Row(
         children: [
@@ -180,18 +189,20 @@ class _MessageFeedState extends State<MessageFeed> {
     }
     return Flexible(
       child: Scaffold(
-        body: ListView(
-          // controller: _scrollController,
+        body: ListView.builder(
           controller: _controller,
-          children: [
-            for (AppEvent pair in eventStream.events)
-              ChatBubble(
-                text: pair.data['text'],
-                isCurrentUser: pair.data['user'],
-              ),
-            // _scrollDown(),
-
-          ],
+          itemCount: eventStream.events.length,
+          itemBuilder: (context, index) {
+            switch (eventStream.events[index].type) {
+              case 'nativegpt.event.textMessage':
+                return ChatBubble(
+                  text: eventStream.events[index].data['text'],
+                  isCurrentUser: eventStream.events[index].data['user'],
+                );
+              default:
+                return null;
+            }
+          },
         ),
       ),
     );

@@ -12,11 +12,8 @@ class EventStream extends ChangeNotifier{
   EventStream._internal({required this.events,});
 
   void addEvent(event){
-    print("yes");
     events.add(event);
-    print(events[0].data);
     notifyListeners();
-    print(events);
   }
 
 }

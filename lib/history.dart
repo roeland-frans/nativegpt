@@ -1,14 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:testtextapp/event_stream.dart';
+import 'package:testtextapp/ui/chat.dart';
+import 'package:provider/provider.dart';
 
-class Message {
-  const Message({
-    required this.text,
-    required this.isCurrentUser,
-  });
-  final String text;
-  final bool isCurrentUser;
-}
 
-class ChatHistory{
 
+class ChatHistory extends StatelessWidget {
+  final EventStream eventStream;
+  final ScrollController _controller = ScrollController();
+
+  ChatHistory({required this.eventStream});
+
+  void _scrollDown() {
+    _controller.jumpTo(_controller.position.maxScrollExtent);
+  }
+  @override
+  Widget build(BuildContext context) {
+    // var eventStream = context.watch<EventStream>();
+    if (eventStream.events.isEmpty) {
+      return Row(
+          children: [
+            Text('No messages yet.'),
+          ]
+      );
+    }
+    return Flexible(
+      child: Scaffold(
+        body: ListView.builder(
+          controller: _controller,
+          itemCount: eventStream.events.length,
+          itemBuilder: (context, index) {
+            switch (eventStream.events[index].type) {
+              case 'nativegpt.event.textMessage':
+                return ChatBubble(
+                  text: eventStream.events[index].data['text'],
+                  isCurrentUser: eventStream.events[index].data['user'],
+                );
+              default:
+                return null;
+            }
+          },
+          // controller: _scrollController,
+        ),
+      ),
+    );
+  }
 }
