@@ -52,7 +52,10 @@ class _MyHomePageState extends State<MyHomePage> {
         page = MessagePage(eventStream: eventStream,);
         break;
       case 1:
-        page = MainPage();
+        page = KnowledgeBasePage();
+        break;
+      case 2:
+        page = SettingsPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -69,12 +72,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     extended: constraints.maxWidth >= 600,
                     destinations: [
                       NavigationRailDestination(
-                        icon: Icon(Icons.home),
+                        icon: Icon(Icons.message),
                         label: Text('Messages'),
                       ),
                       NavigationRailDestination(
-                        icon: Icon(Icons.message),
+                        icon: Icon(Icons.home),
                         label: Text('Knowledge base'),
+                      ),
+                      NavigationRailDestination(
+                        icon: Icon(Icons.settings),
+                        label: Text('Settings'),
                       ),
                     ],
                     selectedIndex: selectedIndex,
@@ -94,22 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         }
-    );
-  }
-}
-
-
-class MainPage extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Placeholder',
-        ),
-      ],
     );
   }
 }

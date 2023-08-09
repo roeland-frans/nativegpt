@@ -55,3 +55,31 @@ class _MessagePageState extends State<MessagePage> {
     );
   }
 }
+
+class KnowledgeBasePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'Placeholder',
+        ),
+      ],
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'Settings Placeholder',
+        ),
+      ],
+    );
+  }
+}
