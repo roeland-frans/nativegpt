@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/ui/history.dart';
+import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/event_stream.dart';
 
 
@@ -20,7 +21,7 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const MyHomePage(title: 'Flutter Demo Home Page',),
       ),
     );
   }
@@ -42,12 +43,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   var selectedIndex = 0;
+  var eventStream = EventStream();
   @override
   Widget build(BuildContext context) {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = MessagePage();
+        page = MessagePage(eventStream: eventStream,);
         break;
       case 1:
         page = MainPage();
@@ -112,50 +114,3 @@ class MainPage extends StatelessWidget {
   }
 }
 
-class MessagePage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _MessagePageState();
-}
-
-class _MessagePageState extends State<MessagePage> {
-  final myController = TextEditingController();
-  var eventStream = EventStream();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        ChatHistory(eventStream: eventStream,),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: TextField(
-                controller: myController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Message',
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.amber)),
-              onPressed: () {
-                AppEvent message = AppEvent.textMessage(myController.text, true);
-                eventStream.addEvent(message);
-                setState(() {
-
-                });
-                AppEvent rpmessage = AppEvent.textMessage("respond", false);
-              },
-              child: Text('Send'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
