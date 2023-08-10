@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/card/text.dart';
-import 'package:provider/provider.dart';
 
 class ChatHistory extends StatelessWidget {
   final EventStream eventStream;

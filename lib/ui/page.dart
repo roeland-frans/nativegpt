@@ -4,7 +4,6 @@ import 'package:testtextapp/ui/history.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:testtextapp/ui/card/navbar.dart';
-import 'package:provider/provider.dart';
 
 class MessagePage extends StatefulWidget {
   final EventStream eventStream;
