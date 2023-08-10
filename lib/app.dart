@@ -9,6 +9,7 @@ import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 
 
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         themeColorSecondary: AppThemeData.themeColorSecondary,
         themeColorAccent: AppThemeData.themeColorAccent,
         themeColorBase: AppThemeData.themeColorBase,
+        textColor: AppThemeData.textColor,
       ),
     );
   }
@@ -44,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String text = "me";
   @override
   Widget build(BuildContext context) {
-    String pagetitle = "9";
+    String pagetitle = "placeholder";
     Widget page;
     switch (selectedIndex) {
       case 0:
@@ -69,10 +71,16 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(title: Text(pagetitle)),
             drawer: Drawer(
               child: NavigationRail(
-                leading: Row(
+                leading: Column(
                   children: [
-                    const IconButton(icon: Icon(Icons.format_line_spacing), onPressed: null),
-                    const Text("NativeGPT"),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("NativeGPT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                      ],
+                    ),
+                    SizedBox(height: 24,),
+                    const Divider(thickness: 2, height: 1, color: Colors.black38,),
                   ],
                 ),
                 extended: constraints.maxWidth >= 600,

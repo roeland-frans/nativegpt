@@ -84,14 +84,19 @@ class KnowledgeBasePage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Placeholder',
-        ),
-      ],
+    return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text(
+            'Placeholder',
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(onPressed: () {  },),
     );
+
   }
 }
 

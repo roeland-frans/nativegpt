@@ -7,6 +7,7 @@ class AppThemeData {
   static Color themeColorSecondary = Colors.indigo;
   static Color themeColorAccent = Colors.indigoAccent;
   static Color themeColorBase = Colors.grey;
+  static Color textColor = Colors.black;
 
   void themeChange() {
     themeColorMain = Colors.blue;
@@ -19,11 +20,13 @@ class AppTheme extends StatelessWidget{
   final Color themeColorSecondary;
   final Color themeColorAccent;
   final Color themeColorBase;
+  final Color textColor;
   AppTheme({
     required this.themeColorMain,
     required this.themeColorSecondary,
     required this.themeColorAccent,
-    required this.themeColorBase});
+    required this.themeColorBase,
+    required this.textColor});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class AppTheme extends StatelessWidget{
               color: themeColorBase
             ),
             titleTextStyle: TextStyle(
-              color: themeColorBase,
+              color: textColor,
               fontWeight: FontWeight.bold,
               fontSize: 18
             )),
