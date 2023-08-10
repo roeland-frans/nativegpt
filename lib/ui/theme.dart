@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:testtextapp/app.dart';
 
 class AppThemeData {
@@ -36,6 +37,7 @@ class AppTheme extends StatelessWidget{
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
               foregroundColor: themeColorMain,
+              backgroundColor: themeColorSecondary
             )),
         textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorSecondary),
         appBarTheme: AppBarTheme(
@@ -47,23 +49,17 @@ class AppTheme extends StatelessWidget{
               color: textColor,
               fontWeight: FontWeight.bold,
               fontSize: 18
-            )),
+            ),
+            elevation: 1),
         indicatorColor: themeColorSecondary,
         highlightColor: themeColorSecondary,
-        navigationRailTheme: NavigationRailThemeData(
-            backgroundColor: themeColorMain,
-            selectedIconTheme: IconThemeData(
-              color: themeColorSecondary
-            ),
-            selectedLabelTextStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: themeColorSecondary
-            )),
-        textTheme: TextTheme(
-          bodyMedium: TextStyle(color: Colors.black),
-          bodyLarge: TextStyle(color: Colors.black),
-          bodySmall: TextStyle(color: Colors.black),
-        )),
+        drawerTheme: DrawerThemeData(
+          backgroundColor: themeColorMain,
+        ),
+        listTileTheme: ListTileThemeData(
+          selectedColor: themeColorSecondary
+        )
+      ),
       home: MyHomePage(),
     );
   }

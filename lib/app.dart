@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:testtextapp/event.dart';
-import 'package:testtextapp/ui/history.dart';
 import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
+
 
 
 
@@ -29,8 +29,12 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var texts = [];
-  var sender = [];
+  var selectedIndex = 0;
+
+  void onItemTapped(index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -40,84 +44,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var selectedIndex = 0;
   var eventStream = EventStream();
 
-  String text = "me";
   @override
   Widget build(BuildContext context) {
-    String pagetitle = "placeholder";
+    var appState = context.watch<MyAppState>();
     Widget page;
-    switch (selectedIndex) {
+    switch (appState.selectedIndex) {
       case 0:
-        page = MessagePage(eventStream: eventStream, title: "Conversations");
-        pagetitle = "Conversations";
+        page = MessagePage(eventStream: eventStream, title: "Conversations", appState: appState,);
         break;
       case 1:
-        page = KnowledgeBasePage(title: "Knowledge base");
-        pagetitle = "Knowledge base";
+        page = KnowledgeBasePage(title: "Knowledge base", appState: appState,);
         break;
       case 2:
-        page = SettingsPage(title: "Settings");
-        pagetitle = "Settings";
+        page = SettingsPage(title: "Settings", appState: appState,);
         break;
       default:
-        throw UnimplementedError('no widget for $selectedIndex');
+        throw UnimplementedError('no widget for ${appState.selectedIndex}');
     }
 
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          return Scaffold(
-            appBar: AppBar(title: Text(pagetitle)),
-            drawer: Drawer(
-              child: NavigationRail(
-                leading: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("NativeGPT", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                      ],
-                    ),
-                    SizedBox(height: 24,),
-                    const Divider(thickness: 2, height: 1, color: Colors.black38,),
-                  ],
-                ),
-                extended: constraints.maxWidth >= 600,
-                minWidth: 50,
-                destinations: [
-                  NavigationRailDestination(
-                    icon: Icon(Icons.message),
-                    label: Text('Conversations'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.folder),
-                    label: Text('Knowledge base'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.settings),
-                    label: Text('Settings'),
-                  ),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
-              ),
-            ),
-            body: Row(
-              children: [
-                Expanded(
-                    child: Container(
-                      child: page,
-                    )
-                )
-              ],
-            ),
-          );
-        }
+    return Scaffold(
+      body: page,
     );
   }
 }
