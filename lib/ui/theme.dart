@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:testtextapp/app.dart';
 
-class AppThemeData {
+class AppThemePalette {
   static Color themeColorMain = Colors.white;
   static Color themeColorSecondary = Colors.indigo;
+  static Color themeColorLighter = Colors.indigo.shade200;
   static Color themeColorAccent = Colors.indigoAccent;
   static Color themeColorBase = Colors.grey;
   static Color textColor = Colors.black;
-
-  void themeChange() {
-    themeColorMain = Colors.blue;
-    themeColorSecondary = Colors.pink;
-  }
 }
 
 class AppTheme extends StatelessWidget{
@@ -56,7 +52,7 @@ class AppTheme extends StatelessWidget{
         ),
         listTileTheme: ListTileThemeData(
           selectedColor: themeColorSecondary
-        )
+        ),
       ),
       home: MyHomePage(),
     );

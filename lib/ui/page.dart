@@ -8,8 +8,7 @@ import 'package:testtextapp/ui/card/navbar.dart';
 class MessagePage extends StatefulWidget {
   final EventStream eventStream;
   final MyAppState appState;
-  final String title;
-  MessagePage({required this.eventStream, required this.title, Key? key, required this.appState,}): super(key: key);
+  MessagePage({required this.eventStream, Key? key, required this.appState,}): super(key: key);
   
   @override
   State<StatefulWidget> createState() => _MessagePageState();
@@ -85,8 +84,7 @@ class _MessagePageState extends State<MessagePage> {
 
 class KnowledgeBasePage extends StatelessWidget{
   final MyAppState appState;
-  final String title;
-  KnowledgeBasePage({required this.title, required this.appState});
+  KnowledgeBasePage({required this.appState});
 
   @override
   Widget build(BuildContext context) {
@@ -109,10 +107,9 @@ class KnowledgeBasePage extends StatelessWidget{
 }
 
 class SettingsPage extends StatelessWidget{
-  final String title;
   final MyAppState appState;
 
-  SettingsPage({required this.title, required this.appState});
+  SettingsPage({required this.appState});
 
   @override
   Widget build(BuildContext context) {

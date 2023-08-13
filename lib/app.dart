@@ -12,11 +12,11 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(), // IMPORTANT
       child: AppTheme(
-        themeColorMain: AppThemeData.themeColorMain,
-        themeColorSecondary: AppThemeData.themeColorSecondary,
-        themeColorAccent: AppThemeData.themeColorAccent,
-        themeColorBase: AppThemeData.themeColorBase,
-        textColor: AppThemeData.textColor,
+        themeColorMain: AppThemePalette.themeColorMain,
+        themeColorSecondary: AppThemePalette.themeColorSecondary,
+        themeColorAccent: AppThemePalette.themeColorAccent,
+        themeColorBase: AppThemePalette.themeColorBase,
+        textColor: AppThemePalette.textColor,
       ),
     );
   }
@@ -46,13 +46,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (appState.selectedIndex) {
       case 0:
-        page = MessagePage(eventStream: eventStream, title: "Conversations", appState: appState,);
+        page = MessagePage(eventStream: eventStream, appState: appState,);
         break;
       case 1:
-        page = KnowledgeBasePage(title: "Knowledge base", appState: appState,);
+        page = KnowledgeBasePage(appState: appState,);
         break;
       case 2:
-        page = SettingsPage(title: "Settings", appState: appState,);
+        page = SettingsPage(appState: appState,);
         break;
       default:
         throw UnimplementedError('no widget for ${appState.selectedIndex}');
