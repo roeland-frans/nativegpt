@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/card/text.dart';
+import 'package:testtextapp/ui/card/avatar.dart';
+
 
 class ChatHistory extends StatelessWidget {
   final EventStream eventStream;
@@ -32,9 +34,14 @@ class ChatHistory extends StatelessWidget {
           itemBuilder: (context, index) {
             switch (eventStream.events[index].type) {
               case 'nativegpt.event.textMessage':
-                return ChatBubble(
-                  text: eventStream.events[index].data['text'],
-                  isCurrentUser: eventStream.events[index].data['user'],
+                return Row(
+                  children: [
+                    AppAvatar(isCurrentUser: eventStream.events[index].data['user']),
+                    ChatBubble(
+                      text: eventStream.events[index].data['text'],
+                      isCurrentUser: eventStream.events[index].data['user'],
+                    ),
+                  ],
                 );
               default:
                 return null;

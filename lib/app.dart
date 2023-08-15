@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(), // IMPORTANT
+      create: (context) => MyAppState(),
       child: AppTheme(
         themeColorMain: AppThemePalette.themeColorMain,
         themeColorSecondary: AppThemePalette.themeColorSecondary,
