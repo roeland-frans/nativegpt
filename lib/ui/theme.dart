@@ -10,7 +10,40 @@ class AppThemePalette {
   static Color textColor = Colors.black;
 }
 
-class AppTheme extends StatelessWidget{
+class AppThemeProvider extends StatelessWidget{
+  final Widget child;
+
+  AppThemeProvider({
+    required this.child
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AppThemeInherited(
+      theme: AppTheme(
+        themeColorMain: AppThemePalette.themeColorMain,
+        themeColorSecondary: AppThemePalette.themeColorSecondary,
+        themeColorAccent: AppThemePalette.themeColorAccent,
+        themeColorBase: AppThemePalette.themeColorBase,
+        textColor: AppThemePalette.textColor,
+      ),
+      child: child,
+    );
+  }
+}
+
+class AppThemeInherited extends InheritedWidget{
+  final AppTheme theme;
+
+  AppThemeInherited({required this.theme, required Widget child}) : super(child: child);
+
+  @override
+  bool updateShouldNotify(AppThemeInherited oldWidget) =>
+      theme != oldWidget.theme;
+  
+}
+
+class AppTheme{
   final Color themeColorMain;
   final Color themeColorSecondary;
   final Color themeColorAccent;
@@ -23,40 +56,44 @@ class AppTheme extends StatelessWidget{
     required this.themeColorBase,
     required this.textColor});
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'NativeGPT',
-      theme: ThemeData(
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: themeColorMain,
-              backgroundColor: themeColorSecondary
-            )),
-        textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorSecondary),
-        appBarTheme: AppBarTheme(
-            color: themeColorMain,
-            iconTheme: IconThemeData(
-              color: themeColorBase
-            ),
-            titleTextStyle: TextStyle(
-              color: textColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 18
-            ),
-            elevation: 1),
-        indicatorColor: themeColorSecondary,
-        highlightColor: themeColorSecondary,
-        drawerTheme: DrawerThemeData(
-          backgroundColor: themeColorMain,
+  ThemeData themeData() => ThemeData(
+    elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+            foregroundColor: themeColorMain,
+            backgroundColor: themeColorSecondary
+        )),
+    textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorSecondary),
+    appBarTheme: AppBarTheme(
+        color: themeColorMain,
+        iconTheme: IconThemeData(
+            color: themeColorBase
         ),
-        listTileTheme: ListTileThemeData(
-          selectedColor: themeColorSecondary
+        titleTextStyle: TextStyle(
+            color: textColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 18
         ),
-      ),
-      home: MyHomePage(),
-    );
+        elevation: 1),
+    indicatorColor: themeColorSecondary,
+    highlightColor: themeColorSecondary,
+    drawerTheme: DrawerThemeData(
+      backgroundColor: themeColorMain,
+    ),
+    listTileTheme: ListTileThemeData(
+        selectedColor: themeColorSecondary
+    ),
+  );
+
+  static AppTheme of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<AppThemeInherited>()!
+        .theme;
   }
 
-
+  Widget builder(BuildContext context, Widget? child) {
+    return AppThemeInherited(
+      theme: this,
+      child: child!,
+    );
+  }
 }

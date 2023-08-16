@@ -34,7 +34,7 @@ class _MessagePageState extends State<MessagePage> {
                   children: [
                     ChatHistory(eventStream: widget.eventStream,),
                     const Divider(thickness: 1, height: 1, color: Colors.black38,),
-                    Padding(
+                    Padding( // move to Composer
                       padding: const EdgeInsets.all(8.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,

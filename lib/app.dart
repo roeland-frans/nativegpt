@@ -4,22 +4,36 @@ import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp>{
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-      child: AppTheme(
-        themeColorMain: AppThemePalette.themeColorMain,
-        themeColorSecondary: AppThemePalette.themeColorSecondary,
-        themeColorAccent: AppThemePalette.themeColorAccent,
-        themeColorBase: AppThemePalette.themeColorBase,
-        textColor: AppThemePalette.textColor,
-      ),
+      child: AppThemeProvider(
+        child: AppMaterialProvider()
+      )
     );
   }
+}
+
+class AppMaterialProvider extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: AppTheme.of(context).themeData(),
+      home: MyHomePage(),
+      builder: AppTheme.of(context).builder,
+    );
+  }
+  
 }
 
 class MyAppState extends ChangeNotifier {
