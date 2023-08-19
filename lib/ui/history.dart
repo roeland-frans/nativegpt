@@ -4,6 +4,7 @@ import 'package:testtextapp/ui/card/text.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 
 
+
 class ChatHistory extends StatelessWidget {
   final EventStream eventStream;
   final ScrollController _controller = ScrollController();
@@ -29,6 +30,7 @@ class ChatHistory extends StatelessWidget {
     return Flexible(
       child: Scaffold(
         body: ListView.builder(
+          reverse: true,
           controller: _controller,
           itemCount: eventStream.events.length,
           itemBuilder: (context, index) {

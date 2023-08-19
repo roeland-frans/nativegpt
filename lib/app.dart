@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
+import 'package:testtextapp/connection.dart';
+
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -11,26 +13,66 @@ class MyApp extends StatefulWidget {
   State<StatefulWidget> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp>{
+class _MyAppState extends State<MyApp> {
+  EventStream? eventStream;
+  AppConnection? connection;
+  @override
+  void initState(){
+    super.initState();
+    connect();
+  }
+
+  void connect(){
+    setState(() {
+      eventStream = EventStream();
+      connection = AppConnection();
+      connection!.addOrbListener('eventStream', onEventStream);
+      connection!.connect();
+    });
+  }
+
+  void onEventStream({required EventStream eventStream}) {
+    setState(() {
+      this.eventStream = eventStream;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: AppThemeProvider(
-        child: AppMaterialProvider()
+        child: AppMaterialProvider(eventStream: eventStream, connection: connection,)
       )
     );
   }
 }
 
-class AppMaterialProvider extends StatelessWidget{
+class AppMaterialProvider extends StatelessWidget {
+  final EventStream? eventStream;
+  final AppConnection? connection;
+  AppMaterialProvider({required this.eventStream, required this.connection});
 
   @override
   Widget build(BuildContext context) {
+    // connection!.connect();
     return MaterialApp(
       theme: AppTheme.of(context).themeData(),
-      home: MyHomePage(),
+      home: eventStream != null ? MyHomePage(eventStream: eventStream!, connection: connection!,): const AppSplash(),
       builder: AppTheme.of(context).builder,
+    );
+  }
+}
+
+class AppSplash extends StatelessWidget {
+  const AppSplash({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
   
@@ -46,13 +88,17 @@ class MyAppState extends ChangeNotifier {
 }
 
 class MyHomePage extends StatefulWidget {
+
+  final EventStream eventStream;
+  final AppConnection connection;
+  MyHomePage({required this.eventStream, required this.connection});
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var eventStream = EventStream();
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +106,13 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (appState.selectedIndex) {
       case 0:
-        page = MessagePage(eventStream: eventStream, appState: appState,);
+        page = MessagePage(eventStream: widget.eventStream, appState: appState, connection: widget.connection,);
         break;
       case 1:
-        page = KnowledgeBasePage(appState: appState,);
+        page = KnowledgeBasePage(appState: appState, connection: widget.connection,);
         break;
       case 2:
-        page = SettingsPage(appState: appState,);
+        page = SettingsPage(appState: appState, connection: widget.connection,);
         break;
       default:
         throw UnimplementedError('no widget for ${appState.selectedIndex}');

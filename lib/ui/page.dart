@@ -4,11 +4,14 @@ import 'package:testtextapp/ui/history.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:testtextapp/ui/card/navbar.dart';
+import 'package:testtextapp/connection.dart';
+
 
 class MessagePage extends StatefulWidget {
   final EventStream eventStream;
+  final AppConnection connection;
   final MyAppState appState;
-  MessagePage({required this.eventStream, Key? key, required this.appState,}): super(key: key);
+  MessagePage({required this.eventStream, Key? key, required this.appState, required this.connection,}): super(key: key);
   
   @override
   State<StatefulWidget> createState() => _MessagePageState();
@@ -60,11 +63,9 @@ class _MessagePageState extends State<MessagePage> {
                             ),
                             onPressed: () {
                               AppEvent message = AppEvent.textMessage(myController.text, true);
-                              widget.eventStream.addEvent(message);
-                              setState(() {});
-                              AppEvent rpmessage = AppEvent.textMessage("respond", false);
-                              widget.eventStream.addEvent(rpmessage);
-                              setState(() {});
+                              widget.connection.addEvent(message);
+                              // widget.eventStream.addEvent(message);
+                              // setState(() {});
                             },
                             label: Text('Send'),
                           ),
@@ -84,7 +85,8 @@ class _MessagePageState extends State<MessagePage> {
 
 class KnowledgeBasePage extends StatelessWidget{
   final MyAppState appState;
-  KnowledgeBasePage({required this.appState});
+  final AppConnection connection;
+  KnowledgeBasePage({required this.appState, required this.connection});
 
   @override
   Widget build(BuildContext context) {
@@ -108,8 +110,8 @@ class KnowledgeBasePage extends StatelessWidget{
 
 class SettingsPage extends StatelessWidget{
   final MyAppState appState;
-
-  SettingsPage({required this.appState});
+  final AppConnection connection;
+  SettingsPage({required this.appState, required this.connection});
 
   @override
   Widget build(BuildContext context) {
