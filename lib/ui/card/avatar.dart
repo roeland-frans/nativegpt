@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:testtextapp/ui/presence/user_avatar.dart';
 
-class AppAvatar extends StatelessWidget{
+class AppAvatar {
+  final UserAvatar userAvatar;
+  final bool? isCurrentUser;
+
   const AppAvatar({
     required this.isCurrentUser,
+    required this.userAvatar,
   });
-  final bool isCurrentUser;
 
-  @override
-  Widget build(BuildContext context) {
-    if (isCurrentUser){
-      return Icon(Icons.person);
-    } else {
-      return Icon(Icons.android);
+
+
+  static AppAvatar? fromMap(Map<dynamic, dynamic>? map){
+    if (map == null) {
+      return null;
     }
+    return AppAvatar(isCurrentUser: map['isUser'], userAvatar: map['image']);
   }
+
+
+
 
 }

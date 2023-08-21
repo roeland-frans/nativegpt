@@ -19,7 +19,7 @@ class AppEvent implements Comparable<AppEvent>{
 
   factory AppEvent.fromEventMap(Map<dynamic, dynamic> eventMap) {
     if (eventMap['type'] == null) {
-      throw Exception('Cannot create an OrbEvent with an empty \'type\'.');
+      throw Exception('Cannot create an AppEvent with an empty \'type\'.');
     }
     return AppEvent(
       id: eventMap['id'],
@@ -28,12 +28,31 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  factory AppEvent.textMessage(String text, bool isCurrentUser) {
+  factory AppEvent.getUser(){
+    return AppEvent(
+      type: 'nativegpt.event.getuser',
+      data: {
+        'name': "eg",
+        'avatar': "eg",
+        'type': "user"
+      }
+    );
+  }
+
+  factory AppEvent.connect() {
+    return AppEvent(
+      type: 'nativegpt.event.connect',
+      data: {
+        'userid': "testUser"
+      }
+    );
+  }
+
+  factory AppEvent.textMessage(String text) {
     return AppEvent(
       type: 'nativegpt.event.textMessage',
       data: {
         'text': text,
-        'user': isCurrentUser
       }
     );
   }

@@ -24,14 +24,22 @@ class _MyAppState extends State<MyApp> {
 
   void connect(){
     setState(() {
-      eventStream = EventStream();
       connection = AppConnection();
+      connection!.addOrbListener('connected', onConnected);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
     });
   }
 
+  void onConnected({required EventStream eventStream}){
+    print("on connect");
+    setState(() {
+      eventStream = EventStream();
+    });
+  }
+
   void onEventStream({required EventStream eventStream}) {
+    print("On event");
     setState(() {
       this.eventStream = eventStream;
     });
