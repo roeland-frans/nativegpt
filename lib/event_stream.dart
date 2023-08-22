@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:testtextapp/event.dart';
 import 'package:flutter/material.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
@@ -36,6 +38,19 @@ class AppUserData {
     required this.avatar,
     required this.type,
   });
+
+  Map<String, dynamic> toMap() => {
+    'name': name,
+    'avatar': avatar,
+    'type': type,
+  };
+
+  Map<String, dynamic> getMap(userID) {
+    Map<String, dynamic> userdata = HashMap();
+    userdata.addAll({'name': 'test'});
+
+    return userdata;
+  }
 
   factory AppUserData.fromMap(Map<dynamic, dynamic> map) {
     return AppUserData(

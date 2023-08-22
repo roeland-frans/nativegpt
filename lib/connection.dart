@@ -2,11 +2,13 @@ import 'dart:collection';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/event_emitter.dart';
+import 'package:testtextapp/ui/card/avatar.dart';
 
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
   EventStream _eventStream = EventStream();
+
   bool firstConnect = true;
 
   void addOrbListener(String type, Function listener) =>
@@ -17,15 +19,9 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      final ud = AppEvent.getUser();
-      print(ud);
-      final userdata = (ud.data as Map<dynamic, dynamic>? ?? {})
-          .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
-          .cast<String, AppUserData>();
-
       _receiveAllEvents(
         receiveBuffer: [AppEvent.connect()],
-        userData: userdata,
+        userData: {},
         emit: () => _eventEmitter.emit(
           firstConnect ? 'firstConnect' : 'reconnect',
           {#eventStream: _eventStream},
@@ -35,17 +31,42 @@ class AppConnection {
   }
 
   void publishEvent(AppEvent event){
-    final ud = AppEvent.getUser().data;
-    final userdata = (ud["testing"] as Map<dynamic, dynamic>? ?? {})
+    final eventMap = {
+      'type': event.type,
+      'data': event.data,
+    };
+    final Map<dynamic, dynamic> allData = {
+      'user': {
+        'name': event.id,
+        'avatar': AppAvatar,
+        'type': UserType.user,
+      },
+      'bot': {
+        'name': event.id,
+        'avatar': AppAvatar,
+        'type': UserType.user,
+      }
+    };
+    Map<String, dynamic> userData() => {
+      'name': event.id,
+      'avatar': AppAvatar,
+      'type': UserType.user,
+    };
+    final userID = event.id;
+    final userdata = (allData['user']
+    as Map<dynamic, dynamic>? ??
+        {})
         .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
         .cast<String, AppUserData>();
-    print("userdata ${ud['name']}");
-    print("userdata ${userdata}");
+    print("DONE");
 
     // AppUserData.fromMap(AppEvent.getUser().data);
     _receiveAllEvents(
-      receiveBuffer: [event],
-      userData: userdata,
+      receiveBuffer: [AppEvent.fromEventMap(eventMap)],
+      userData: <String, AppUserData>{
+        ..._eventStream.userData,
+        ...userdata,
+      },
       emit: () => _eventEmitter.emit(
         'event',
         {#event: event, #eventStream: _eventStream},

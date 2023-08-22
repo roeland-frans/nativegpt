@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/card/text.dart';
-import 'package:testtextapp/ui/card/avatar.dart';
+import 'package:testtextapp/ui/presence/user_avatar.dart';
 
 
 
@@ -40,6 +40,7 @@ class ChatHistory extends StatelessWidget {
               case 'nativegpt.event.textMessage':
                 return Row(
                   children: [
+                    BuildAvatar(),
                     ChatBubble(
                       text: eventStream.events[index].data['text'],
                       isCurrentUser: true
