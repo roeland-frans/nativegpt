@@ -116,11 +116,11 @@ class AppConnection {
       userData: <String, AppUserData>{..._eventStream.userData, ...userdata,}, );
     // <String, AppUserData>{..._eventStream.userData, ...userdata,},
     print("inside userData: ${_eventStream.userData['nativegpt.event.textMessage']}");
-    print("This is userdata now ${_eventStream.userData}");
 
     if (newEventStream.events.length != _eventStream.events.length) {
       _eventStream = newEventStream;
       _eventEmitter.emit('eventStream', {#eventStream: _eventStream});
+      print("This is userdata now ${_eventStream.userData}");
       emit();
     }
   }

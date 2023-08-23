@@ -40,7 +40,9 @@ class ChatHistory extends StatelessWidget {
                 // print("index event: ${eventStream.events[index]}");
                 // print("index userData: ${eventStream.userData[index]}");
                 print("GRZEGRBDNRTSEHG userData: ${eventStream.userData}");
-                print("inside userData: ${eventStream.userData[eventStream.events[index].type]}");
+                var thingy = eventStream.userData['nativegpt.event.textMessage'];
+                print("inside userData: ${thingy}");
+                print("inside inside : ${thingy}");
                 return Row(
                   children: [
                     BuildAvatar(),
