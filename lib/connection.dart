@@ -19,16 +19,7 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      // final allData = {
-      //   'userid': {
-      //     'user': {
-      //       'name': null,
-      //       'avatar': null,
-      //       'type': 'user',
-      //     },
-      //   },
-      // };
-      final allData = AppUserData.userDataTemp("testid", 'setup', null, 'bot');
+      final allData = AppUserData.userDataTemp('testid', 'setup', null, 'bot');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
           {})
@@ -51,20 +42,11 @@ class AppConnection {
   void addEvent(payloadMap) {
     final eventMap = payloadMap['data']['event'];
     final event = AppEvent.fromEventMap(eventMap);
-    print(event);
-    // final allData = {
-    //   'user': {
-    //     'stuff': {
-    //       'name': event.id,
-    //       'avatar': null,
-    //       'type': 'user',
-    //     },
-    //   },
-    // };
-
-    // print(allData['user']);
-    print('THIS IS THE EVENT TYPE ${event.type}');
-    final allData = AppUserData.userDataTemp(event.type, event.id, null, 'user');
+    // print(event);
+    // print('THIS IS THE EVENT TYPE ${event.type}');
+    print("BZRSEFRTDRTESGZSFDNESGZFSEVXDF");
+    print(event.id);
+    final allData = AppUserData.userDataTemp(event.id, event.id, null, 'user');
 
     final userdata = (allData
     as Map<dynamic, dynamic>? ??
@@ -88,6 +70,7 @@ class AppConnection {
 
   void publishEvent(AppEvent event){
     final eventMap = {
+      'id': event.id,
       'type': event.type,
       'data': event.data,
     };

@@ -39,7 +39,7 @@ class AppUserData {
     required this.type,
   });
 
-  static Map<String?, Map<String, dynamic>> userDataTemp(String? userid, name, avatar, type) {
+  static Map<String?, Map<String?, dynamic>> userDataTemp(String? userid, name, avatar, type) {
     final allData = {
         userid: {
           'name': name,

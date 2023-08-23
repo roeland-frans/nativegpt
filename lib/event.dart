@@ -28,17 +28,6 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  factory AppEvent.getUser(){
-    return AppEvent(
-      type: 'nativegpt.event.getuser',
-      data: {
-        'name': "eg",
-        'avatar': "eg",
-        'type': "user"
-      }
-    );
-  }
-
   factory AppEvent.connect() {
     return AppEvent(
       type: 'nativegpt.event.connect',

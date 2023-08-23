@@ -15,7 +15,8 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isCurrentUser = false;
-    if (identical(userData.type, 'user')){
+
+    if (identical(userData.type, UserType.user)){
       isCurrentUser = true;
     }
 
