@@ -8,8 +8,8 @@ import 'dart:math';
 class BuildAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final avatarImage = 'https://picsum.photos/250?image=9';
-    final avatarImage = null;
+    final avatarImage = 'https://picsum.photos/250?image=9';
+    // final avatarImage = null;
 
     final avatarCrop = AppAvatarCrop.circle;
 

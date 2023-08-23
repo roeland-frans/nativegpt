@@ -19,9 +19,27 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
+      // final allData = {
+      //   'userid': {
+      //     'user': {
+      //       'name': null,
+      //       'avatar': null,
+      //       'type': 'user',
+      //     },
+      //   },
+      // };
+      final allData = AppUserData.userDataTemp("testid", 'setup', null, 'bot');
+      final userdata = (allData
+      as Map<dynamic, dynamic>? ??
+          {})
+          .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
+          .cast<String, AppUserData>();
       _receiveAllEvents(
         receiveBuffer: [AppEvent.connect()],
-        userData: {},
+        userdata: <String, AppUserData>{
+          ..._eventStream.userData,
+          ...userdata,
+        },
         emit: () => _eventEmitter.emit(
           firstConnect ? 'firstConnect' : 'reconnect',
           {#eventStream: _eventStream},
@@ -30,40 +48,34 @@ class AppConnection {
     }
   }
 
-  void publishEvent(AppEvent event){
-    final eventMap = {
-      'type': event.type,
-      'data': event.data,
-    };
-    final Map<dynamic, dynamic> allData = {
-      'user': {
-        'name': event.id,
-        'avatar': AppAvatar,
-        'type': UserType.user,
-      },
-      'bot': {
-        'name': event.id,
-        'avatar': AppAvatar,
-        'type': UserType.user,
-      }
-    };
-    Map<String, dynamic> userData() => {
-      'name': event.id,
-      'avatar': AppAvatar,
-      'type': UserType.user,
-    };
-    final userID = event.id;
-    final userdata = (allData['user']
+  void addEvent(payloadMap) {
+    final eventMap = payloadMap['data']['event'];
+    final event = AppEvent.fromEventMap(eventMap);
+    print(event);
+    // final allData = {
+    //   'user': {
+    //     'stuff': {
+    //       'name': event.id,
+    //       'avatar': null,
+    //       'type': 'user',
+    //     },
+    //   },
+    // };
+
+    // print(allData['user']);
+    print('THIS IS THE EVENT TYPE ${event.type}');
+    final allData = AppUserData.userDataTemp(event.type, event.id, null, 'user');
+
+    final userdata = (allData
     as Map<dynamic, dynamic>? ??
         {})
         .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
         .cast<String, AppUserData>();
-    print("DONE");
 
     // AppUserData.fromMap(AppEvent.getUser().data);
     _receiveAllEvents(
-      receiveBuffer: [AppEvent.fromEventMap(eventMap)],
-      userData: <String, AppUserData>{
+      receiveBuffer: [event],
+      userdata: <String, AppUserData>{
         ..._eventStream.userData,
         ...userdata,
       },
@@ -74,16 +86,38 @@ class AppConnection {
     );
   }
 
+  void publishEvent(AppEvent event){
+    final eventMap = {
+      'type': event.type,
+      'data': event.data,
+    };
+    final payloadMap = {
+      'type': 'meya.orb.entry.ws.publish_request',
+      'data': {
+        'request_id': "test",
+        'event': eventMap,
+        'thread_id': "test",
+      }
+    };
+    addEvent(payloadMap);
+
+  }
+
   void _receiveAllEvents({
     required List<AppEvent> receiveBuffer,
-    required Map<String, AppUserData> userData,
+    required Map<String, AppUserData> userdata,
     required void Function() emit
   }){
     print(receiveBuffer);
-    print(userData);
+    print(userdata);
+    print("This is whats going into userdata now ${userdata}");
     final newEventStream = EventStream(
       events: [...receiveBuffer, ..._eventStream.events],
-      userData: <String, AppUserData>{..._eventStream.userData, ...userData,}, );
+      userData: <String, AppUserData>{..._eventStream.userData, ...userdata,}, );
+    // <String, AppUserData>{..._eventStream.userData, ...userdata,},
+    print("inside userData: ${_eventStream.userData['nativegpt.event.textMessage']}");
+    print("This is userdata now ${_eventStream.userData}");
+
     if (newEventStream.events.length != _eventStream.events.length) {
       _eventStream = newEventStream;
       _eventEmitter.emit('eventStream', {#eventStream: _eventStream});

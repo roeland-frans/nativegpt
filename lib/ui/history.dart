@@ -34,16 +34,19 @@ class ChatHistory extends StatelessWidget {
           controller: _controller,
           itemCount: eventStream.events.length,
           itemBuilder: (context, index) {
-            print(eventStream.events[index]);
-            print(eventStream.userData[index]);
+
             switch (eventStream.events[index].type) {
               case 'nativegpt.event.textMessage':
+                // print("index event: ${eventStream.events[index]}");
+                // print("index userData: ${eventStream.userData[index]}");
+                print("GRZEGRBDNRTSEHG userData: ${eventStream.userData}");
+                print("inside userData: ${eventStream.userData[eventStream.events[index].type]}");
                 return Row(
                   children: [
                     BuildAvatar(),
                     ChatBubble(
                       text: eventStream.events[index].data['text'],
-                      isCurrentUser: true
+                      userData: eventStream.userData[eventStream.events[index].type]!,
                     ),
                   ],
                 );

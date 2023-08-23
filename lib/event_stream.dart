@@ -39,17 +39,15 @@ class AppUserData {
     required this.type,
   });
 
-  Map<String, dynamic> toMap() => {
-    'name': name,
-    'avatar': avatar,
-    'type': type,
-  };
-
-  Map<String, dynamic> getMap(userID) {
-    Map<String, dynamic> userdata = HashMap();
-    userdata.addAll({'name': 'test'});
-
-    return userdata;
+  static Map<String?, Map<String, dynamic>> userDataTemp(String? userid, name, avatar, type) {
+    final allData = {
+        userid: {
+          'name': name,
+          'avatar': avatar,
+          'type': type,
+        },
+    };
+    return allData;
   }
 
   factory AppUserData.fromMap(Map<dynamic, dynamic> map) {

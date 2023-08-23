@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/theme.dart';
 
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     Key? key,
     required this.text,
-    required this.isCurrentUser,
+    required this.userData,
   }) : super(key: key);
   final String text;
-  final bool isCurrentUser;
+  final AppUserData userData;
+
 
   @override
   Widget build(BuildContext context) {
+    bool isCurrentUser = false;
+    if (identical(userData.type, 'user')){
+      isCurrentUser = true;
+    }
+
     return Padding(
       padding: EdgeInsets.fromLTRB(
         isCurrentUser ? 12.0 : 16.0,

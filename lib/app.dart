@@ -39,7 +39,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   void onEventStream({required EventStream eventStream}) {
-    print("On event");
     setState(() {
       this.eventStream = eventStream;
     });

@@ -62,7 +62,7 @@ class _MessagePageState extends State<MessagePage> {
                               )
                             ),
                             onPressed: () {
-                              widget.connection.publishEvent(AppEvent.textMessage(myController.text, "testid"));
+                              widget.connection.publishEvent(AppEvent.textMessage(myController.text, 'mem'));
                               myController.clear();
                               // widget.eventStream.addEvent(message);
                               // setState(() {});
