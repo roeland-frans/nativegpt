@@ -43,7 +43,7 @@ class AppConnection {
 
   void publishEvent(AppEvent event){
     final actorData = ActorData.userList()[event.id];
-    final avatarData = AppAvatar(image: actorData!['image'], crop: AppAvatarCrop.circle, monogram: actorData['name']![0]);
+    final avatarData = AppAvatar(image: actorData?['image'], crop: AppAvatarCrop.circle, monogram: actorData!['name']![0]);
     final allData = AppUserData.userDataTemp(event.id, actorData['name'], avatarData, actorData['type']);
 
     final userdata = (allData
@@ -52,7 +52,6 @@ class AppConnection {
         .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
         .cast<String, AppUserData>();
 
-    // AppUserData.fromMap(AppEvent.getUser().data);
     _receiveAllEvents(
       receiveBuffer: [event],
       userdata: <String, AppUserData>{

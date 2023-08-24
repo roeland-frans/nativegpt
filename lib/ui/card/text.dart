@@ -14,10 +14,13 @@ class ChatBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUser = false;
+    bool isCurrentUser;
+    double c_width = MediaQuery.of(context).size.width*0.8;
 
-    if (identical(userData.type, UserType.user)){
+    if (userData.type == UserType.user){
       isCurrentUser = true;
+    } else {
+      isCurrentUser = false;
     }
 
     return Padding(
@@ -35,10 +38,13 @@ class ChatBubble extends StatelessWidget {
             border: Border.all(color: isCurrentUser ? AppThemePalette.themeColorBase : AppThemePalette.themeColorAccent, width: 2),
             color: isCurrentUser ? AppThemePalette.themeColorMain : AppThemePalette.themeColorLighter,
           ),
-          child: Padding(
+          child: Container(
             padding: const EdgeInsets.all(12),
+            constraints: BoxConstraints(maxWidth: c_width),
             child: Text(
               text,
+              softWrap: true,
+              textWidthBasis: TextWidthBasis.parent,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                   color: isCurrentUser ? Colors.black87 : Colors.black87),
             ),

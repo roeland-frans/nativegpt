@@ -26,7 +26,7 @@ class BuildAvatar extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             color: AppThemePalette.themeColorAccent,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(40),
           ),
           child: Align(
               alignment: Alignment.center,
