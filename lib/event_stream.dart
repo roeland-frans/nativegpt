@@ -17,13 +17,14 @@ class EventStream extends ChangeNotifier{
 
 }
 
-enum UserType { bot, user }
+enum UserType { bot, user, system }
 
 extension UserTypeExtension on UserType {
   static UserType fromString(String? type) =>
       {
         'bot': UserType.bot,
         'user': UserType.user,
+        'system': UserType.system,
       }[type!] ??
           UserType.bot;
 }

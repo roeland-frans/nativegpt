@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/ui/card/text.dart';
 import 'package:testtextapp/ui/presence/user_avatar.dart';
-import 'package:testtextapp/userinfo.dart';
+import 'package:testtextapp/actordata.dart';
 
 
 
@@ -36,21 +36,14 @@ class ChatHistory extends StatelessWidget {
           controller: _controller,
           itemCount: eventStream.events.length,
           itemBuilder: (context, index) {
-
             switch (eventStream.events[index].type) {
               case 'nativegpt.event.textMessage':
-                // print("index event: ${eventStream.events[index]}");
-                // print("index userData: ${eventStream.userData[index]}");
-                print("GRZEGRBDNRTSEHG userData: ${eventStream.userData}");
-                var thingy = eventStream.userData[UserInfo.userID];
-                print("inside userData: ${thingy}");
-                print("inside inside : ${thingy?.type}");
                 return Row(
                   children: [
-                    BuildAvatar(),
+                    BuildAvatar(userData: eventStream.userData[ActorData.userID]!,),
                     ChatBubble(
                       text: eventStream.events[index].data['text'],
-                      userData: eventStream.userData[UserInfo.userID]!,
+                      userData: eventStream.userData[ActorData.userID]!,
                     ),
                   ],
                 );

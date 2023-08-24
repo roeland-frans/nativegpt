@@ -3,6 +3,8 @@ import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
+import 'package:testtextapp/actordata.dart';
+
 
 
 class AppConnection {
@@ -39,14 +41,10 @@ class AppConnection {
     }
   }
 
-  void addEvent(payloadMap) {
-    final eventMap = payloadMap['data']['event'];
-    final event = AppEvent.fromEventMap(eventMap);
-    // print(event);
-    // print('THIS IS THE EVENT TYPE ${event.type}');
-    print("BZRSEFRTDRTESGZSFDNESGZFSEVXDF");
-    print(event.id);
-    final allData = AppUserData.userDataTemp(event.id, event.id, null, 'user');
+  void publishEvent(AppEvent event){
+    final actorData = ActorData.userList()[event.id];
+    final avatarData = AppAvatar(image: actorData!['image'], crop: AppAvatarCrop.circle, monogram: actorData['name']![0]);
+    final allData = AppUserData.userDataTemp(event.id, actorData['name'], avatarData, actorData['type']);
 
     final userdata = (allData
     as Map<dynamic, dynamic>? ??
@@ -68,42 +66,18 @@ class AppConnection {
     );
   }
 
-  void publishEvent(AppEvent event){
-    final eventMap = {
-      'id': event.id,
-      'type': event.type,
-      'data': event.data,
-    };
-    final payloadMap = {
-      'type': 'meya.orb.entry.ws.publish_request',
-      'data': {
-        'request_id': "test",
-        'event': eventMap,
-        'thread_id': "test",
-      }
-    };
-    addEvent(payloadMap);
-
-  }
-
   void _receiveAllEvents({
     required List<AppEvent> receiveBuffer,
     required Map<String, AppUserData> userdata,
     required void Function() emit
   }){
-    print(receiveBuffer);
-    print(userdata);
-    print("This is whats going into userdata now ${userdata}");
     final newEventStream = EventStream(
       events: [...receiveBuffer, ..._eventStream.events],
       userData: <String, AppUserData>{..._eventStream.userData, ...userdata,}, );
-    // <String, AppUserData>{..._eventStream.userData, ...userdata,},
-    print("inside userData: ${_eventStream.userData['nativegpt.event.textMessage']}");
 
     if (newEventStream.events.length != _eventStream.events.length) {
       _eventStream = newEventStream;
       _eventEmitter.emit('eventStream', {#eventStream: _eventStream});
-      print("This is userdata now ${_eventStream.userData}");
       emit();
     }
   }

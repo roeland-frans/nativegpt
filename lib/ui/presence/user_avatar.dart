@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import '../card/avatar.dart';
 import '../theme.dart';
+import 'package:testtextapp/event_stream.dart';
 import 'dart:math';
 
-
-
 class BuildAvatar extends StatelessWidget {
+  final AppUserData userData;
+  BuildAvatar({required this.userData});
+
   @override
   Widget build(BuildContext context) {
-    final avatarImage = 'https://picsum.photos/250?image=9';
-    // final avatarImage = null;
-
-    final avatarCrop = AppAvatarCrop.circle;
+    final avatarImage = userData.avatar?.image;
+    final avatarCrop = userData.avatar?.crop;
 
     if (avatarImage != null) {
       return SizedBox(
@@ -20,6 +20,7 @@ class BuildAvatar extends StatelessWidget {
         child: _croppedImage(context, avatarImage, avatarCrop),
       );
     } else {
+      final monogram = (userData.avatar?.monogram ?? 'P');
       return Container(
           width: 40,
           height: 40,
@@ -32,7 +33,7 @@ class BuildAvatar extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("data"),
+                  Text(monogram),
                   BotSemicircle(
                     radius: 40,
                     color: AppThemePalette.themeColorSecondary,

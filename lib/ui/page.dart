@@ -5,7 +5,7 @@ import 'package:testtextapp/event_stream.dart';
 import 'package:flutter/material.dart';
 import 'package:testtextapp/ui/card/navbar.dart';
 import 'package:testtextapp/connection.dart';
-import 'package:testtextapp/userinfo.dart';
+import 'package:testtextapp/actordata.dart';
 
 
 
@@ -64,10 +64,8 @@ class _MessagePageState extends State<MessagePage> {
                               )
                             ),
                             onPressed: () {
-                              print("THRGNZWFZER ${UserInfo.userID}");
-                              widget.connection.publishEvent(AppEvent.textMessage(myController.text, UserInfo.userID));
+                              widget.connection.publishEvent(AppEvent.textMessage(myController.text, ActorData.userID));
                               myController.clear();
-                              // widget.eventStream.addEvent(message);
                               // setState(() {});
                             },
                             label: Text('Send'),
