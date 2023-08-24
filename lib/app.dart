@@ -40,6 +40,7 @@ class _MyAppState extends State<MyApp> {
 
   void onEventStream({required EventStream eventStream}) {
     setState(() {
+      connection?.firstConnect = false;
       this.eventStream = eventStream;
     });
   }

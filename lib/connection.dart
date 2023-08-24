@@ -1,11 +1,10 @@
 import 'dart:collection';
 import 'package:testtextapp/event.dart';
+import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
-
-
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
@@ -21,7 +20,7 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      final allData = AppUserData.userDataTemp('testid', 'setup', null, 'bot');
+      final allData = AppUserData.userDataTemp('user00', 'System', null, 'system');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
           {})
@@ -34,7 +33,7 @@ class AppConnection {
           ...userdata,
         },
         emit: () => _eventEmitter.emit(
-          firstConnect ? 'firstConnect' : 'reconnect',
+          firstConnect ? 'connected' : 'reconnect',
           {#eventStream: _eventStream},
         ),
       );
