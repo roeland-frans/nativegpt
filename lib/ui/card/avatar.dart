@@ -19,6 +19,7 @@ class AppAvatar {
   final String? image;
   final AppAvatarCrop crop;
   final String? monogram;
+  final test?;
 
   const AppAvatar({
     required this.image,
