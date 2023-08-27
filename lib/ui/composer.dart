@@ -22,24 +22,17 @@ class AppComposer extends StatefulWidget{
   }) : super(key: key);
 
   @override
-  _AppComposerState createState() => _AppComposerState();
+  State<StatefulWidget> createState() => _AppComposerState();
 }
 
 class _AppComposerState extends State<AppComposer>{
-  AppComposerVisibility? visibility = AppComposerVisibility.show;
-  _AppComposerMode mode = _AppComposerMode.text;
   TextEditingController myController = TextEditingController();
   FocusNode composerFocusNode = FocusNode();
-  FocusNode currentNode = FocusNode();
-  FocusNode nextNode = FocusNode();
-
 
   @override
   void initState() {
     super.initState();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -50,21 +43,17 @@ class _AppComposerState extends State<AppComposer>{
 class _AppTextMode extends StatefulWidget {
   final EventStream eventStream;
   final AppConnection connection;
-  // final void Function(_AppComposerMode mode) toggleMode;
   final TextEditingController myController;
-  // final AppComposerEventSpec current;
 
   const _AppTextMode({
     required this.eventStream,
     required this.connection,
-    // required this.toggleMode,
     required this.myController,
-    // required this.current,
     Key? key,
   }) : super(key: key);
 
   @override
-  _AppTextModeState createState() => _AppTextModeState();
+  State<StatefulWidget> createState() => _AppTextModeState();
 }
 
 class _AppTextModeState extends State<_AppTextMode> {
@@ -104,14 +93,13 @@ class _AppTextModeState extends State<_AppTextMode> {
               ),
               onKey: (RawKeyEvent keyEvent) {
                 if (keyEvent.logicalKey == LogicalKeyboardKey.tab){
-                  print("asdadda");
                   widget.connection.publishEvent(
                     AppEvent.textMessage(
                         widget.myController.text, ActorData.userID
                     ),
                   );
                   widget.myController.clear();
-                  composerFocusNode.requestFocus();
+                  composerFocusNode.unfocus();
                 }
               },
             ),
