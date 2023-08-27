@@ -87,7 +87,7 @@ class _AppTextModeState extends State<_AppTextMode> {
                   composerFocusNode.requestFocus();
                 },
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(),
+                  border: OutlineInputBorder(borderSide: BorderSide(color: AppThemePalette.themeColorSecondary)),
                   hintText: 'Message',
                 ),
               ),
@@ -99,7 +99,7 @@ class _AppTextModeState extends State<_AppTextMode> {
                     ),
                   );
                   widget.myController.clear();
-                  composerFocusNode.unfocus();
+                  composerFocusNode.requestFocus();
                 }
               },
             ),

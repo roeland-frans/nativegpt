@@ -62,7 +62,7 @@ class AppTheme{
             foregroundColor: themeColorMain,
             backgroundColor: themeColorSecondary
         )),
-    textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorSecondary),
+    textSelectionTheme: TextSelectionThemeData(selectionColor: themeColorAccent),
     appBarTheme: AppBarTheme(
         color: themeColorMain,
         iconTheme: IconThemeData(
@@ -76,6 +76,7 @@ class AppTheme{
         elevation: 1),
     indicatorColor: themeColorSecondary,
     highlightColor: themeColorSecondary,
+    splashColor: themeColorAccent,
     drawerTheme: DrawerThemeData(
       backgroundColor: themeColorMain,
     ),
