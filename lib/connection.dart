@@ -6,6 +6,7 @@ import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
 
+
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
   EventStream _eventStream = EventStream();
