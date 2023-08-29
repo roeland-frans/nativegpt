@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testtextapp/actordata.dart';
 import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/connection.dart';
+import 'event.dart';
 
 
 class MyApp extends StatefulWidget {
@@ -25,22 +27,26 @@ class _MyAppState extends State<MyApp> {
   void connect(){
     setState(() {
       connection = AppConnection();
-      connection!.addOrbListener('connected', onConnected);
+      connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
     });
   }
 
-  void onConnected({required EventStream eventStream}){
-    print("on connect");
+  void onEvent({required EventStream eventStream, required AppEvent event}) {
     setState(() {
-      eventStream = EventStream();
+      this.eventStream = eventStream;
     });
+    if (event.id == ActorData.sysID) {
+      connection?.firstConnect = false;
+      return;
+    } else if (event.id == ActorData.userID) {
+      return;
+    }
   }
 
   void onEventStream({required EventStream eventStream}) {
     setState(() {
-      connection?.firstConnect = false;
       this.eventStream = eventStream;
     });
   }
@@ -50,7 +56,10 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: AppThemeProvider(
-        child: AppMaterialProvider(eventStream: eventStream, connection: connection,)
+        child: AppMaterialProvider(
+          eventStream: eventStream,
+          connection: connection,
+        )
       )
     );
   }

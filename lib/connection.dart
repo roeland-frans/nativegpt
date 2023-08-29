@@ -6,6 +6,17 @@ import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
 
+abstract class Connection {
+  void publishEvent(AppEvent event);
+}
+
+class LocalConnection {
+
+}
+
+class WebsocketConnection {
+
+}
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
@@ -21,21 +32,22 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      final allData = AppUserData.userDataTemp('user00', 'System', null, 'system');
+      AppEvent event = AppEvent.connect(ActorData.sysID);
+      final allData = AppUserData.userDataTemp(event.id, 'System', null, 'system');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
           {})
           .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
           .cast<String, AppUserData>();
       _receiveAllEvents(
-        receiveBuffer: [AppEvent.connect()],
+        receiveBuffer: [event],
         userdata: <String, AppUserData>{
           ..._eventStream.userData,
           ...userdata,
         },
         emit: () => _eventEmitter.emit(
-          firstConnect ? 'connected' : 'reconnect',
-          {#eventStream: _eventStream},
+          'event',
+          {#event: event, #eventStream: _eventStream},
         ),
       );
     }
@@ -80,5 +92,5 @@ class AppConnection {
       emit();
     }
   }
-
 }
+

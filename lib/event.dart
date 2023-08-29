@@ -28,9 +28,9 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  factory AppEvent.connect() {
+  factory AppEvent.connect(String systemID) {
     return AppEvent(
-      // id: systemID,
+      id: systemID,
       type: 'nativegpt.event.connect',
       data: {
         'userid': "testUser"
