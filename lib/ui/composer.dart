@@ -145,7 +145,7 @@ class _AppSendTextButton extends StatelessWidget {
       onPressed: () {
         connection.publishEvent(AppEvent.textMessage(textEditingController.text, ActorData.userID));
         textEditingController.clear();
-        connection.publishEvent(AppEvent.textMessage('test response', ActorData.botID));
+        // connection.publishEvent(AppEvent.textMessage('test response', ActorData.botID));
         composerFocusNode.unfocus();
       },
       label: Text('Send'),

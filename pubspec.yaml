@@ -37,6 +37,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.0
   path_provider: ^2.0.15
+  langchain: ^0.0.10
+  langchain_openai: ^0.0.10
 
 dev_dependencies:
   flutter_test:

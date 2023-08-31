@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
       connection?.firstConnect = false;
       return;
     } else if (event.id == ActorData.userID) {
+      print("Is user, calling bot");
+      WebsocketConnection(connection: connection!).getBot(event);
       return;
     }
   }

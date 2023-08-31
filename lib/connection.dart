@@ -1,22 +1,15 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
+import 'package:langchain/langchain.dart';
+import 'package:langchain_openai/langchain_openai.dart';
 
-abstract class Connection {
-  void publishEvent(AppEvent event);
-}
 
-class LocalConnection {
-
-}
-
-class WebsocketConnection {
-
-}
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
@@ -91,6 +84,23 @@ class AppConnection {
       _eventEmitter.emit('eventStream', {#eventStream: _eventStream});
       emit();
     }
+  }
+}
+
+class WebsocketConnection {
+
+  final AppConnection connection;
+
+  WebsocketConnection({required this.connection});
+
+  Future<void> getBot(AppEvent event) async {
+    // model info takes the form of ft:{OPENAI_MODEL_NAME}:{ORG_NAME}::{MODEL_ID}
+    final botid = ActorData.userList()[ActorData.botID]!;
+    final openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+    final text = HumanChatMessage(content: event.data['text']);
+    final result = await openai.predictMessages([text]);
+    print(result);
+    connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botID),);
   }
 }
 
