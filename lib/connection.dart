@@ -37,8 +37,8 @@ class AppConnection {
           ...userdata,
         },
         emit: () => _eventEmitter.emit(
-          'event',
-          {#event: event, #eventStream: _eventStream},
+          'connect',
+          {#eventStream: _eventStream},
         ),
       );
     }
@@ -88,12 +88,16 @@ class AppConnection {
 class WebsocketConnection {
 
   final AppConnection connection;
+  ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
 
   WebsocketConnection({required this.connection});
 
-  Future<void> getBot(AppEvent event) async {
+  void connect() {
     final botid = ActorData.userList()[ActorData.botID]!;
-    final openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+    openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+  }
+
+  Future<void> getBot(AppEvent event) async {
     final text = HumanChatMessage(content: event.data['text']);
     final result = await openai.predictMessages([text]);
     connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botID),);

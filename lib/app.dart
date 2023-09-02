@@ -18,6 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   EventStream? eventStream;
   AppConnection? connection;
+  WebsocketConnection? botConnection;
   @override
   void initState(){
     super.initState();
@@ -27,9 +28,19 @@ class _MyAppState extends State<MyApp> {
   void connect(){
     setState(() {
       connection = AppConnection();
+      botConnection = WebsocketConnection(connection: connection!);
+      connection!.addOrbListener('connect', onConnect);
       connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
+      botConnection!.connect();
+    });
+  }
+
+  void onConnect({required EventStream eventStream,}) {
+    connection?.firstConnect = false;
+    setState(() {
+      this.eventStream = eventStream;
     });
   }
 
@@ -37,11 +48,8 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       this.eventStream = eventStream;
     });
-    if (event.id == ActorData.sysID) {
-      connection?.firstConnect = false;
-      return;
-    } else if (event.id == ActorData.userID) {
-      WebsocketConnection(connection: connection!).getBot(event);
+    if (event.id == ActorData.userID) {
+      botConnection?.getBot(event);
       return;
     }
   }
