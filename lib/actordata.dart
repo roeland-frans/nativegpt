@@ -3,7 +3,6 @@ class ActorData {
   static String userID = 'user01';
   static String botID = 'user02';
 
-  static String userName = 'TestName';
   static Map<String, Map<String, String?>> userList() => {
     sysID: {
       'name': 'System',
@@ -17,7 +16,6 @@ class ActorData {
     botID: {
       'name': 'Chatbot',
       'model': 'gpt-3.5-turbo',
-      'key': '[INSERT API KEY HERE]',
       'type': 'bot',
       'image': null,
     },

@@ -85,16 +85,20 @@ class AppConnection {
   }
 }
 
-class WebsocketConnection {
+class BotConnection {
 
   final AppConnection connection;
+  final botid = ActorData.userList()[ActorData.botID]!;
   ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
 
-  WebsocketConnection({required this.connection});
+  BotConnection({required this.connection});
 
-  void connect() {
-    final botid = ActorData.userList()[ActorData.botID]!;
-    openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+  void connect(String apiKey) {
+    openai = ChatOpenAI(apiKey: apiKey, model: botid['model'] ?? "gpt-3.5-turbo");
+  }
+
+  void updateKey(String apiKey) {
+    openai = ChatOpenAI(apiKey: apiKey, model: botid['model'] ?? "gpt-3.5-turbo");
   }
 
   Future<void> getBot(AppEvent event) async {

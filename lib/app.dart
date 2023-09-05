@@ -18,7 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   EventStream? eventStream;
   AppConnection? connection;
-  WebsocketConnection? botConnection;
+  BotConnection? botConnection;
   @override
   void initState(){
     super.initState();
@@ -28,12 +28,12 @@ class _MyAppState extends State<MyApp> {
   void connect(){
     setState(() {
       connection = AppConnection();
-      botConnection = WebsocketConnection(connection: connection!);
+      botConnection = BotConnection(connection: connection!);
       connection!.addOrbListener('connect', onConnect);
       connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
-      botConnection!.connect();
+      botConnection!.connect('empty');
     });
   }
 
@@ -68,6 +68,7 @@ class _MyAppState extends State<MyApp> {
         child: AppMaterialProvider(
           eventStream: eventStream,
           connection: connection,
+          botConnection: botConnection,
         )
       )
     );
@@ -77,14 +78,15 @@ class _MyAppState extends State<MyApp> {
 class AppMaterialProvider extends StatelessWidget {
   final EventStream? eventStream;
   final AppConnection? connection;
-  AppMaterialProvider({required this.eventStream, required this.connection});
+  final BotConnection? botConnection;
+  AppMaterialProvider({required this.eventStream, required this.connection, required this.botConnection});
 
   @override
   Widget build(BuildContext context) {
     // connection!.connect();
     return MaterialApp(
       theme: AppTheme.of(context).themeData(),
-      home: eventStream != null ? MyHomePage(eventStream: eventStream!, connection: connection!,): const AppSplash(),
+      home: eventStream != null ? MyHomePage(eventStream: eventStream!, connection: connection!, botConnection: botConnection!,): const AppSplash(),
       builder: AppTheme.of(context).builder,
     );
   }
@@ -117,7 +119,8 @@ class MyHomePage extends StatefulWidget {
 
   final EventStream eventStream;
   final AppConnection connection;
-  MyHomePage({required this.eventStream, required this.connection});
+  final BotConnection botConnection;
+  MyHomePage({required this.eventStream, required this.connection, required this.botConnection});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -138,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = KnowledgeBasePage(appState: appState, connection: widget.connection,);
         break;
       case 2:
-        page = SettingsPage(appState: appState, connection: widget.connection,);
+        page = SettingsPage(appState: appState, connection: widget.connection, botConnection: widget.botConnection,);
         break;
       default:
         throw UnimplementedError('no widget for ${appState.selectedIndex}');
