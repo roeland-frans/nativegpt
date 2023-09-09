@@ -1,8 +1,9 @@
 import 'dart:collection';
 import 'dart:io';
-import 'package:testtextapp/event.dart';
+// import 'dart:js_interop';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
+import 'package:testtextapp/storage.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
@@ -88,17 +89,20 @@ class AppConnection {
 class BotConnection {
 
   final AppConnection connection;
-  final botid = ActorData.userList()[ActorData.botID]!;
+  final DataStore dataStore;
+  final botId = ActorData.userList()[ActorData.botID]!;
   ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
 
-  BotConnection({required this.connection});
+  BotConnection({required this.connection, required this.dataStore});
 
-  void connect(String apiKey) {
-    openai = ChatOpenAI(apiKey: apiKey, model: botid['model'] ?? "gpt-3.5-turbo");
+  Future<void> connect(String apiKey) async {
+    await dataStore.readItem("apiKey");
+    openai = ChatOpenAI(apiKey: dataStore.apikey, model: botId['model'] ?? "gpt-3.5-turbo");
   }
 
   void updateKey(String apiKey) {
-    openai = ChatOpenAI(apiKey: apiKey, model: botid['model'] ?? "gpt-3.5-turbo");
+    openai = ChatOpenAI(apiKey: apiKey, model: botId['model'] ?? "gpt-3.5-turbo");
+    dataStore.addItem("apiKey", apiKey);
   }
 
   Future<void> getBot(AppEvent event) async {

@@ -6,6 +6,8 @@ import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/connection.dart';
 import 'event.dart';
+import 'package:testtextapp/storage.dart';
+
 
 
 class MyApp extends StatefulWidget {
@@ -28,7 +30,7 @@ class _MyAppState extends State<MyApp> {
   void connect(){
     setState(() {
       connection = AppConnection();
-      botConnection = BotConnection(connection: connection!);
+      botConnection = BotConnection(connection: connection!, dataStore: DataStore());
       connection!.addOrbListener('connect', onConnect);
       connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);

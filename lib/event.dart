@@ -48,14 +48,6 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  bool checkSender(word) {
-    if (word[0] == "t") {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   @override
   int compareTo(AppEvent other) {
     // TODO: implement compareTo
