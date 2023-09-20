@@ -65,7 +65,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(),
+      create: (context) => MyAppState(botConnection: botConnection!),
       child: AppThemeProvider(
         child: AppMaterialProvider(
           eventStream: eventStream,
@@ -85,7 +85,6 @@ class AppMaterialProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // connection!.connect();
     return MaterialApp(
       theme: AppTheme.of(context).themeData(),
       home: eventStream != null ? MyHomePage(eventStream: eventStream!, connection: connection!, botConnection: botConnection!,): const AppSplash(),
@@ -110,6 +109,15 @@ class AppSplash extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var selectedIndex = 0;
+  var selectedProvider = 'None';
+  final BotConnection? botConnection;
+
+  MyAppState({required this.botConnection});
+
+  void onProviderChange(String? item) {
+    selectedProvider = item!;
+    // botConnection?.updateBot(item, null);
+  }
 
   void onItemTapped(index) {
     selectedIndex = index;
@@ -129,7 +137,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
 
   @override
   Widget build(BuildContext context) {

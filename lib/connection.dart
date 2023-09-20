@@ -1,7 +1,7 @@
 import 'dart:collection';
 import 'dart:io';
-// import 'dart:js_interop';
 import 'package:testtextapp/event.dart';
+import 'package:testtextapp/app.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/storage.dart';
 import 'package:testtextapp/event_emitter.dart';
@@ -9,6 +9,9 @@ import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
+import 'package:testtextapp/ui/settings.dart';
+
+
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
@@ -90,18 +93,28 @@ class BotConnection {
 
   final AppConnection connection;
   final DataStore dataStore;
+
   final botId = ActorData.userList()[ActorData.botID]!;
-  ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
+  ChatOpenAI openai = ChatOpenAI(apiKey: "None");
 
   BotConnection({required this.connection, required this.dataStore});
 
   Future<void> connect(String apiKey) async {
     await dataStore.readItem("apiKey");
-    openai = ChatOpenAI(apiKey: dataStore.apikey, model: botId['model'] ?? "gpt-3.5-turbo");
+    openai = ChatOpenAI(apiKey: dataStore.apikey, model: 'gpt-3.5-turbo');
+  }
+
+  void updateBot(String? model, String? apiKey) {
+    openai = ChatOpenAI(apiKey: apiKey ?? dataStore.apikey, model: 'gpt-3.5-turbo');
+    if (apiKey != null) {
+      dataStore.deleteItem("apiKey");
+      dataStore.addItem("apiKey", apiKey);
+    }
   }
 
   void updateKey(String apiKey) {
-    openai = ChatOpenAI(apiKey: apiKey, model: botId['model'] ?? "gpt-3.5-turbo");
+    openai = ChatOpenAI(apiKey: apiKey, model: 'gpt-3.5-turbo');
+    dataStore.deleteItem("apiKey");
     dataStore.addItem("apiKey", apiKey);
   }
 

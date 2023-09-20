@@ -2,12 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../connection.dart';
 import '../event_emitter.dart';
+import 'package:testtextapp/app.dart';
+
 
 class SettingsWidget extends StatefulWidget {
   final AppConnection connection;
   final BotConnection botConnection;
+  final MyAppState appState;
 
-  SettingsWidget({required this.connection, required this.botConnection});
+  SettingsWidget({required this.connection, required this.botConnection, required this.appState});
 
   @override
   State<StatefulWidget> createState() => _SettingsWidgetState();
@@ -18,8 +21,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
   final List<DropdownMenuEntry> beans = <DropdownMenuEntry>[];
   final EventEmitter _eventEmitter = EventEmitter();
   TextEditingController apiController = TextEditingController();
-  List<String> items = ["None", "Faiss (local only)", "gpt-3.5-turbo"];
-  String selectedItem = "None";
+  List<String> items = ["None", "Faiss (local only)"];
 
   @override
   Widget build(BuildContext context) {
@@ -55,12 +57,14 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder()
                         ),
-                        value: selectedItem,
+                        value: widget.appState.selectedProvider,
                         items: items.map((item) => DropdownMenuItem<String>(
                             value: item,
                             child: Text(item)
                         )).toList(),
-                        onChanged: (item) => setState(() => selectedItem = item!),
+                        onChanged: (item) => setState(() => widget.appState.onProviderChange(item)),
+                          // widget.appState.selectedProvider = item!
+
                       ),
                     )
                   ],

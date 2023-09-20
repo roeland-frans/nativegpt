@@ -1,3 +1,4 @@
+
 class ActorData {
   static String sysID = 'user00';
   static String userID = 'user01';
@@ -15,7 +16,6 @@ class ActorData {
     },
     botID: {
       'name': 'Chatbot',
-      'model': 'gpt-3.5-turbo',
       'type': 'bot',
       'image': null,
     },

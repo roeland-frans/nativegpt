@@ -87,7 +87,7 @@ class SettingsPage extends StatelessWidget{
     return Scaffold(
       appBar: AppBar(title: Text("Settings"),),
       drawer: NavBar(appState: appState,),
-      body: SettingsWidget(connection: connection, botConnection: botConnection,)
+      body: SettingsWidget(connection: connection, botConnection: botConnection, appState: appState,)
     );
   }
 }
