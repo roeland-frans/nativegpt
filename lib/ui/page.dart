@@ -7,6 +7,8 @@ import 'package:testtextapp/ui/card/navbar.dart';
 import 'package:testtextapp/connection.dart';
 import 'package:testtextapp/actordata.dart';
 
+import 'composer.dart';
+
 
 
 class MessagePage extends StatefulWidget {
@@ -20,7 +22,6 @@ class MessagePage extends StatefulWidget {
 }
 
 class _MessagePageState extends State<MessagePage> {
-  final myController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,58 +29,24 @@ class _MessagePageState extends State<MessagePage> {
       appBar: AppBar(title: Text("Conversations"),),
       drawer: NavBar(appState: widget.appState,),
       body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Row(
-            children: [
-              const VerticalDivider(thickness: 2, width: 1, color: Colors.black38,),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    ChatHistory(eventStream: widget.eventStream,),
-                    const Divider(thickness: 1, height: 1, color: Colors.black38,),
-                    Padding( // move to Composer
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Flexible(
-                            child: TextField(
-                              controller: myController,
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: 'Message',
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          ElevatedButton.icon(
-                            icon: Icon(Icons.send),
-                            style: ButtonStyle(
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.zero,
-                                  )
-                              )
-                            ),
-                            onPressed: () {
-                              widget.connection.publishEvent(AppEvent.textMessage(myController.text, ActorData.userID));
-                              myController.clear();
-                              widget.connection.publishEvent(AppEvent.textMessage('test response', ActorData.botID));
-                              // setState(() {});
-                            },
-                            label: Text('Send'),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+          builder: (context, constraints) {
+            return Row(
+              children: [
+                const VerticalDivider(thickness: 2, width: 1, color: Colors.black38,),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ChatHistory(eventStream: widget.eventStream,),
+                      const Divider(thickness: 1, height: 1, color: Colors.black38,),
+                      AppComposer(eventStream: widget.eventStream, connection: widget.connection,)
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          );
-        }
+              ],
+            );
+          }
       ),
     );
   }

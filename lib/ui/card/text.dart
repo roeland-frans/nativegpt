@@ -15,7 +15,7 @@ class ChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isCurrentUser;
-    double c_width = MediaQuery.of(context).size.width*0.8;
+    double cWidth = MediaQuery.of(context).size.width*0.8;
 
     if (userData.type == UserType.user){
       isCurrentUser = true;
@@ -40,13 +40,13 @@ class ChatBubble extends StatelessWidget {
           ),
           child: Container(
             padding: const EdgeInsets.all(12),
-            constraints: BoxConstraints(maxWidth: c_width),
-            child: Text(
+            constraints: BoxConstraints(maxWidth: cWidth),
+            child: SelectableText(
               text,
-              softWrap: true,
+              enableInteractiveSelection: true,
               textWidthBasis: TextWidthBasis.parent,
               style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                  color: isCurrentUser ? Colors.black87 : Colors.black87),
+                  color: isCurrentUser ? AppThemePalette.textColor : AppThemePalette.textColor),
             ),
           ),
         ),

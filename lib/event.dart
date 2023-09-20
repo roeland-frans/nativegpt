@@ -61,7 +61,69 @@ class AppEvent implements Comparable<AppEvent>{
     // TODO: implement compareTo
     throw UnimplementedError();
   }
-
 }
+
+enum AppComposerFocus { file, image, text, blur }
+
+extension AppComposerFocusExtension on AppComposerFocus {
+  static AppComposerFocus? fromString(String? focus) {
+    switch (focus) {
+      case 'file':
+        return AppComposerFocus.file;
+      case 'image':
+        return AppComposerFocus.image;
+      case 'blur':
+        return AppComposerFocus.blur;
+      case 'text':
+        return AppComposerFocus.text;
+      default:
+        return null;
+    }
+  }
+}
+
+enum AppComposerVisibility { collapse, hide, show }
+
+extension AppComposerVisibilityExtension on AppComposerVisibility {
+  static AppComposerVisibility? fromString(String? visibility) {
+    switch (visibility) {
+      case 'collapse':
+        return AppComposerVisibility.collapse;
+      case 'hide':
+        return AppComposerVisibility.hide;
+      case 'show':
+        return AppComposerVisibility.show;
+      default:
+        return null;
+    }
+  }
+}
+
+class AppComposerEventSpec {
+  final AppComposerFocus? focus;
+  final String? placeholder;
+  final String? collapsePlaceholder;
+  final AppComposerVisibility? visibility;
+
+  const AppComposerEventSpec({
+    this.focus,
+    this.placeholder,
+    this.collapsePlaceholder,
+    this.visibility,
+  });
+
+  static AppComposerEventSpec? fromMap(Map<dynamic, dynamic>? map) {
+    if (map == null) {
+      return null;
+    }
+    return AppComposerEventSpec(
+      focus: AppComposerFocusExtension.fromString(map['focus']),
+      placeholder: map['placeholder'],
+      collapsePlaceholder: map['collapsePlaceholder'],
+      visibility: AppComposerVisibilityExtension.fromString(map['visibility']),
+    );
+  }
+}
+
 
 
