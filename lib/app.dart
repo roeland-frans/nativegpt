@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:testtextapp/actordata.dart';
 import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/connection.dart';
+import 'event.dart';
 
 
 class MyApp extends StatefulWidget {
@@ -16,6 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   EventStream? eventStream;
   AppConnection? connection;
+  WebsocketConnection? botConnection;
   @override
   void initState(){
     super.initState();
@@ -25,22 +28,34 @@ class _MyAppState extends State<MyApp> {
   void connect(){
     setState(() {
       connection = AppConnection();
-      connection!.addOrbListener('connected', onConnected);
+      botConnection = WebsocketConnection(connection: connection!);
+      connection!.addOrbListener('connect', onConnect);
+      connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
+      botConnection!.connect();
     });
   }
 
-  void onConnected({required EventStream eventStream}){
-    print("on connect");
+  void onConnect({required EventStream eventStream,}) {
+    connection?.firstConnect = false;
     setState(() {
-      eventStream = EventStream();
+      this.eventStream = eventStream;
     });
+  }
+
+  void onEvent({required EventStream eventStream, required AppEvent event}) {
+    setState(() {
+      this.eventStream = eventStream;
+    });
+    if (event.id == ActorData.userID) {
+      botConnection?.getBot(event);
+      return;
+    }
   }
 
   void onEventStream({required EventStream eventStream}) {
     setState(() {
-      connection?.firstConnect = false;
       this.eventStream = eventStream;
     });
   }
@@ -50,7 +65,10 @@ class _MyAppState extends State<MyApp> {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: AppThemeProvider(
-        child: AppMaterialProvider(eventStream: eventStream, connection: connection,)
+        child: AppMaterialProvider(
+          eventStream: eventStream,
+          connection: connection,
+        )
       )
     );
   }

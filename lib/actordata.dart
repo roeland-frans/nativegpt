@@ -16,6 +16,8 @@ class ActorData {
     },
     botID: {
       'name': 'Chatbot',
+      'model': 'gpt-3.5-turbo',
+      'key': '[INSERT API KEY HERE]',
       'type': 'bot',
       'image': null,
     },

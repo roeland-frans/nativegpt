@@ -1,10 +1,13 @@
 import 'dart:collection';
+import 'dart:io';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
+import 'package:langchain/langchain.dart';
+import 'package:langchain_openai/langchain_openai.dart';
 
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
@@ -20,20 +23,21 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      final allData = AppUserData.userDataTemp('user00', 'System', null, 'system');
+      AppEvent event = AppEvent.connect(ActorData.sysID);
+      final allData = AppUserData.userDataTemp(event.id, 'System', null, 'system');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
           {})
           .map((key, value) => MapEntry(key, AppUserData.fromMap(value)))
           .cast<String, AppUserData>();
       _receiveAllEvents(
-        receiveBuffer: [AppEvent.connect()],
+        receiveBuffer: [event],
         userdata: <String, AppUserData>{
           ..._eventStream.userData,
           ...userdata,
         },
         emit: () => _eventEmitter.emit(
-          firstConnect ? 'connected' : 'reconnect',
+          'connect',
           {#eventStream: _eventStream},
         ),
       );
@@ -79,5 +83,24 @@ class AppConnection {
       emit();
     }
   }
-
 }
+
+class WebsocketConnection {
+
+  final AppConnection connection;
+  ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
+
+  WebsocketConnection({required this.connection});
+
+  void connect() {
+    final botid = ActorData.userList()[ActorData.botID]!;
+    openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+  }
+
+  Future<void> getBot(AppEvent event) async {
+    final text = HumanChatMessage(content: event.data['text']);
+    final result = await openai.predictMessages([text]);
+    connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botID),);
+  }
+}
+
