@@ -1,40 +1,105 @@
-
-import 'package:testtextapp/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:testtextapp/event.dart';
+import 'package:testtextapp/ui/page.dart';
+import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
-import 'package:testtextapp/ui/chat.dart';
+import 'package:testtextapp/connection.dart';
 
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<StatefulWidget> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  EventStream? eventStream;
+  AppConnection? connection;
+  @override
+  void initState(){
+    super.initState();
+    connect();
+  }
+
+  void connect(){
+    setState(() {
+      connection = AppConnection();
+      connection!.addOrbListener('connected', onConnected);
+      connection!.addOrbListener('eventStream', onEventStream);
+      connection!.connect();
+    });
+  }
+
+  void onConnected({required EventStream eventStream}){
+    print("on connect");
+    setState(() {
+      eventStream = EventStream();
+    });
+  }
+
+  void onEventStream({required EventStream eventStream}) {
+    setState(() {
+      connection?.firstConnect = false;
+      this.eventStream = eventStream;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(), // IMPORTANT
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
-        ),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      ),
+      create: (context) => MyAppState(),
+      child: AppThemeProvider(
+        child: AppMaterialProvider(eventStream: eventStream, connection: connection,)
+      )
     );
   }
 }
 
+class AppMaterialProvider extends StatelessWidget {
+  final EventStream? eventStream;
+  final AppConnection? connection;
+  AppMaterialProvider({required this.eventStream, required this.connection});
+
+  @override
+  Widget build(BuildContext context) {
+    // connection!.connect();
+    return MaterialApp(
+      theme: AppTheme.of(context).themeData(),
+      home: eventStream != null ? MyHomePage(eventStream: eventStream!, connection: connection!,): const AppSplash(),
+      builder: AppTheme.of(context).builder,
+    );
+  }
+}
+
+class AppSplash extends StatelessWidget {
+  const AppSplash({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+  
+}
+
 class MyAppState extends ChangeNotifier {
-  var texts = [];
-  var sender = [];
+  var selectedIndex = 0;
+
+  void onItemTapped(index) {
+    selectedIndex = index;
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+
+  final EventStream eventStream;
+  final AppConnection connection;
+  MyHomePage({required this.eventStream, required this.connection});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -42,158 +107,28 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  var selectedIndex = 0;
+
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
     Widget page;
-    switch (selectedIndex) {
+    switch (appState.selectedIndex) {
       case 0:
-        page = MainPage();
+        page = MessagePage(eventStream: widget.eventStream, appState: appState, connection: widget.connection,);
         break;
       case 1:
-        page = MessagePage();
+        page = KnowledgeBasePage(appState: appState, connection: widget.connection,);
+        break;
+      case 2:
+        page = SettingsPage(appState: appState, connection: widget.connection,);
         break;
       default:
-        throw UnimplementedError('no widget for $selectedIndex');
+        throw UnimplementedError('no widget for ${appState.selectedIndex}');
     }
 
-    return LayoutBuilder(
-        builder: (context, constraints) {
-          return Scaffold(
-            body: Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                    extended: constraints.maxWidth >= 600,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.message),
-                        label: Text('Messages'),
-                      ),
-                    ],
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                ),
-                Expanded(
-                    child: Container(
-                      child: page,
-                    )
-                )
-              ],
-            ),
-          );
-        }
+    return Scaffold(
+      body: page,
     );
   }
 }
 
-
-class MainPage extends StatelessWidget {
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Placeholder',
-        ),
-      ],
-    );
-  }
-}
-
-class MessagePage extends StatelessWidget{
-
-  final myController = TextEditingController();
-  var eventStream = EventStream();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        MessageFeed(),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              child: TextField(
-                controller: myController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Message',
-                ),
-              ),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              style: ButtonStyle(backgroundColor: MaterialStatePropertyAll<Color>(Colors.amber)),
-              onPressed: () {
-                AppEvent message = AppEvent.textMessage(myController.text, true);
-                print(message.type);
-                eventStream.addEvent(message);
-                AppEvent rpmessage = AppEvent.textMessage("respond", false);
-              },
-              child: Text('Send'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class MessageFeed extends StatefulWidget{
-  @override
-  State<StatefulWidget> createState() => _MessageFeedState();
-}
-
-class _MessageFeedState extends State<MessageFeed> {
-  // final ScrollController _scrollController = ScrollController();
-  final ScrollController _controller = ScrollController();
-  var eventStream = EventStream();
-
-  void _scrollDown() {
-    _controller.jumpTo(_controller.position.maxScrollExtent);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (eventStream.events.isEmpty) {
-      return Row(
-        children: [
-          Text('No messages yet.'),
-        ]
-      );
-    }
-    return Flexible(
-      child: Scaffold(
-        body: ListView(
-          // controller: _scrollController,
-          controller: _controller,
-          children: [
-            for (AppEvent pair in eventStream.events)
-              ChatBubble(
-                text: pair.data['text'],
-                isCurrentUser: pair.data['user'],
-              ),
-            // _scrollDown(),
-
-          ],
-        ),
-      ),
-    );
-  }
-}

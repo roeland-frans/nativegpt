@@ -1,8 +1,3 @@
-import 'package:testtextapp/main.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
 
 class AppEvent implements Comparable<AppEvent>{
   String? id;
@@ -24,7 +19,7 @@ class AppEvent implements Comparable<AppEvent>{
 
   factory AppEvent.fromEventMap(Map<dynamic, dynamic> eventMap) {
     if (eventMap['type'] == null) {
-      throw Exception('Cannot create an OrbEvent with an empty \'type\'.');
+      throw Exception('Cannot create an AppEvent with an empty \'type\'.');
     }
     return AppEvent(
       id: eventMap['id'],
@@ -33,12 +28,22 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  factory AppEvent.textMessage(String text, bool isCurrentUser) {
+  factory AppEvent.connect() {
     return AppEvent(
+      // id: systemID,
+      type: 'nativegpt.event.connect',
+      data: {
+        'userid': "testUser"
+      }
+    );
+  }
+
+  factory AppEvent.textMessage(String text, String userID) {
+    return AppEvent(
+      id: userID,
       type: 'nativegpt.event.textMessage',
       data: {
         'text': text,
-        'user': isCurrentUser
       }
     );
   }
@@ -56,7 +61,69 @@ class AppEvent implements Comparable<AppEvent>{
     // TODO: implement compareTo
     throw UnimplementedError();
   }
-
 }
+
+enum AppComposerFocus { file, image, text, blur }
+
+extension AppComposerFocusExtension on AppComposerFocus {
+  static AppComposerFocus? fromString(String? focus) {
+    switch (focus) {
+      case 'file':
+        return AppComposerFocus.file;
+      case 'image':
+        return AppComposerFocus.image;
+      case 'blur':
+        return AppComposerFocus.blur;
+      case 'text':
+        return AppComposerFocus.text;
+      default:
+        return null;
+    }
+  }
+}
+
+enum AppComposerVisibility { collapse, hide, show }
+
+extension AppComposerVisibilityExtension on AppComposerVisibility {
+  static AppComposerVisibility? fromString(String? visibility) {
+    switch (visibility) {
+      case 'collapse':
+        return AppComposerVisibility.collapse;
+      case 'hide':
+        return AppComposerVisibility.hide;
+      case 'show':
+        return AppComposerVisibility.show;
+      default:
+        return null;
+    }
+  }
+}
+
+class AppComposerEventSpec {
+  final AppComposerFocus? focus;
+  final String? placeholder;
+  final String? collapsePlaceholder;
+  final AppComposerVisibility? visibility;
+
+  const AppComposerEventSpec({
+    this.focus,
+    this.placeholder,
+    this.collapsePlaceholder,
+    this.visibility,
+  });
+
+  static AppComposerEventSpec? fromMap(Map<dynamic, dynamic>? map) {
+    if (map == null) {
+      return null;
+    }
+    return AppComposerEventSpec(
+      focus: AppComposerFocusExtension.fromString(map['focus']),
+      placeholder: map['placeholder'],
+      collapsePlaceholder: map['collapsePlaceholder'],
+      visibility: AppComposerVisibilityExtension.fromString(map['visibility']),
+    );
+  }
+}
+
 
 

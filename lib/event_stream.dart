@@ -1,22 +1,61 @@
+import 'dart:collection';
+
 import 'package:testtextapp/event.dart';
 import 'package:flutter/material.dart';
+import 'package:testtextapp/ui/card/avatar.dart';
 
 class EventStream extends ChangeNotifier{
-  static final EventStream eventStream = EventStream._internal(events: []);
   final List<AppEvent> events;
+  final Map<String, AppUserData> userData;
 
-  factory EventStream(){
+  EventStream._({required this.events, required this.userData,});
+
+  factory EventStream({List<AppEvent> events = const [], Map<String, AppUserData> userData = const {},}){
+    final eventStream = EventStream._(events: events, userData: userData);
     return eventStream;
   }
 
-  EventStream._internal({required this.events,});
+}
 
-  void addEvent(event){
-    print("yes");
-    events.add(event);
-    print(events[0].data);
-    notifyListeners();
-    print(events);
+enum UserType { bot, user, system }
+
+extension UserTypeExtension on UserType {
+  static UserType fromString(String? type) =>
+      {
+        'bot': UserType.bot,
+        'user': UserType.user,
+        'system': UserType.system,
+      }[type!] ??
+          UserType.bot;
+}
+
+class AppUserData {
+  final String? name;
+  final AppAvatar? avatar;
+  final UserType type;
+
+  AppUserData({
+    required this.name,
+    required this.avatar,
+    required this.type,
+  });
+
+  static Map<String?, Map<String?, dynamic>> userDataTemp(String? userid, name, avatar, type) {
+    final allData = {
+        userid: {
+          'name': name,
+          'avatar': avatar,
+          'type': type,
+        },
+    };
+    return allData;
   }
 
+  factory AppUserData.fromMap(Map<dynamic, dynamic> map) {
+    return AppUserData(
+      name: map['name'],
+      avatar: map['avatar'],
+      type: UserTypeExtension.fromString(map['type']),
+    );
+  }
 }
