@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:testtextapp/actordata.dart';
+import 'package:testtextapp/main.dart';
 import 'package:testtextapp/ui/page.dart';
 import 'package:testtextapp/ui/theme.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/connection.dart';
 import 'event.dart';
 import 'package:testtextapp/storage.dart';
+import '../objbox.dart';
+
 
 
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
+
   @override
   State<StatefulWidget> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
+  final ObjectBox objectBox = objectbox;
   EventStream? eventStream;
   AppConnection? connection;
   BotConnection? botConnection;
@@ -65,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(botConnection: botConnection!),
+      create: (context) => MyAppState(botConnection: botConnection!, objBox: objectBox),
       child: AppThemeProvider(
         child: AppMaterialProvider(
           eventStream: eventStream,
@@ -109,13 +114,27 @@ class AppSplash extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   var selectedIndex = 0;
-  var selectedProvider = 'None';
+  final ObjectBox objBox;
+  var selectedProvider = "None";
   final BotConnection? botConnection;
 
-  MyAppState({required this.botConnection});
+  MyAppState({required this.botConnection, required this.objBox});
+
+  String getProvider() {
+    if (objBox.getSetting("provider").isEmpty) {
+      selectedProvider = "None";
+
+    } else {
+      selectedProvider = objBox.getSetting("provider")[0].name!;
+
+    }
+    return selectedProvider;
+  }
 
   void onProviderChange(String? item) {
     selectedProvider = item!;
+    objBox.addSetting(selectedProvider, "provider");
+
     // botConnection?.updateBot(item, null);
   }
 

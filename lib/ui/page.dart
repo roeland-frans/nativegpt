@@ -76,18 +76,59 @@ class KnowledgeBasePage extends StatelessWidget{
   }
 }
 
-class SettingsPage extends StatelessWidget{
+class SettingsPage extends StatefulWidget{
   final MyAppState appState;
   final AppConnection connection;
   final BotConnection botConnection;
   SettingsPage({required this.appState, required this.connection, required this.botConnection});
 
   @override
+  State<StatefulWidget> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>{
+
+  int pageIndex = 0;
+
+  Widget pageState() {
+    switch (pageIndex) {
+      case 1:
+        return AdvancedSettingsWidget(connection: widget.connection, botConnection: widget.botConnection, appState: widget.appState,);
+      case 2:
+        return DisplaySettingsWidget();
+      default:
+        return GeneralSettingsWidget();
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        onDestinationSelected: (int index) {
+          setState(() {
+            pageIndex = index;
+          });
+        },
+        selectedIndex: pageIndex,
+        destinations: [
+          NavigationDestination(
+            icon: Icon(Icons.settings),
+            label: 'General',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.handyman),
+            label: 'Advanced',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.computer),
+            label: 'Display',
+          ),
+        ],
+      ),
       appBar: AppBar(title: Text("Settings"),),
-      drawer: NavBar(appState: appState,),
-      body: SettingsWidget(connection: connection, botConnection: botConnection, appState: appState,)
+      drawer: NavBar(appState: widget.appState,),
+      body: pageState(),
     );
   }
 }

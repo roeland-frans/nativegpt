@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:objectbox/objectbox.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
@@ -22,6 +24,9 @@ class Setting {
   @Id()
   int id = 0;
 
+  @Index()
+  String uid = "";
+
   String? name;
 
   @Property(type: PropertyType.date) // Store as int in milliseconds
@@ -33,15 +38,45 @@ class Setting {
 
 class ObjectBox {
   /// The Store of this app.
-  late final Store store;
+  final Store store;
+  // late final ObjControl objControl = ObjControl();
+  late final Box<Setting> _box;
+  late final Query<Setting> _query;
+
 
   ObjectBox._create(this.store) {
-    final userBox = store.box<Setting>();
-    final test1 = Setting();
-    userBox.put(test1);
+    _box = store.box<Setting>();
+    _query = _box.query().order(Setting_.uid, flags: Order.descending).build();
+  }
 
+  void addSetting(String name, String uid) {
+    final setting = Setting();
+    setting.name = name;
+    setting.uid = uid;
+    removeSetting(uid);
+    _box.put(setting);
+  }
 
-    // Add any additional setup code, e.g. build queries.
+  List<Setting> getAllSetting() {
+    List<Setting> allQuery = _query.find();
+    return allQuery;
+  }
+
+  List<Setting> getSetting(String uid) {
+    Query<Setting> query = _box.query(Setting_.uid.equals(uid)).build();
+    List<Setting> settingQuery = query.find();
+    // print(settingQuery);
+    // for (int i = 0; i < settingQuery.length; i ++) {
+    //   print(settingQuery[i].id);
+    // }
+    query.close();
+    return settingQuery;
+  }
+
+  void removeSetting(String uid) {
+    Query<Setting> query = _box.query(Setting_.uid.equals(uid)).build();
+    query.remove();
+    query.close();
   }
 
   /// Create an instance of ObjectBox to use throughout the app.
@@ -51,8 +86,4 @@ class ObjectBox {
     final store = await openStore(directory: p.join(docsDir.path, "obx-example"));
     return ObjectBox._create(store);
   }
-}
-
-class testObjBox {
-
 }

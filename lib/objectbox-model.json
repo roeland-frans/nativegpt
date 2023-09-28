@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2602928623001098342",
-      "lastPropertyId": "3:7973603476078928146",
+      "lastPropertyId": "4:6983793548300162198",
       "name": "Setting",
       "properties": [
         {
@@ -23,13 +23,20 @@
           "id": "3:7973603476078928146",
           "name": "date",
           "type": 10
+        },
+        {
+          "id": "4:6983793548300162198",
+          "name": "uid",
+          "type": 9,
+          "flags": 2048,
+          "indexId": "1:3455916316253125218"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "2:2602928623001098342",
-  "lastIndexId": "0:0",
+  "lastIndexId": "1:3455916316253125218",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,

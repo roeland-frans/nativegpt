@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import '../connection.dart';
 import '../event_emitter.dart';
 import 'package:testtextapp/app.dart';
+import '../objbox.dart';
 
 
-class SettingsWidget extends StatefulWidget {
+class AdvancedSettingsWidget extends StatefulWidget {
   final AppConnection connection;
   final BotConnection botConnection;
   final MyAppState appState;
 
-  SettingsWidget({required this.connection, required this.botConnection, required this.appState});
+  AdvancedSettingsWidget({required this.connection, required this.botConnection, required this.appState});
 
   @override
-  State<StatefulWidget> createState() => _SettingsWidgetState();
+  State<StatefulWidget> createState() => _AdvancedSettingsWidgetState();
 
 }
 
-class _SettingsWidgetState extends State<SettingsWidget> {
+class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
   final List<DropdownMenuEntry> beans = <DropdownMenuEntry>[];
-  final EventEmitter _eventEmitter = EventEmitter();
   TextEditingController apiController = TextEditingController();
   List<String> items = ["None", "Faiss (local only)"];
 
@@ -57,7 +57,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
                         decoration: InputDecoration(
                             enabledBorder: OutlineInputBorder()
                         ),
-                        value: widget.appState.selectedProvider,
+                        value: widget.appState.getProvider(),
                         items: items.map((item) => DropdownMenuItem<String>(
                             value: item,
                             child: Text(item)
@@ -266,4 +266,36 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       ),
     );
   }
+}
+
+class GeneralSettingsWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'Profile settings go here',
+        ),
+      ],
+    );
+  }
+
+}
+
+class DisplaySettingsWidget extends StatelessWidget {
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'App personalization settings go here',
+        ),
+      ],
+    );
+  }
+
 }
