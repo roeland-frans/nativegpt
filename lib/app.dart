@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       this.eventStream = eventStream;
     });
-    if (event.id == ActorData.userID) {
+    if (event.id == ActorData.userId) {
       botConnection?.getBot(event);
       return;
     }
@@ -116,17 +116,37 @@ class MyAppState extends ChangeNotifier {
   var selectedIndex = 0;
   final ObjectBox objBox;
   var selectedProvider = "None";
+  // var userName = "User";
+  // var userAvatar = null;
   final BotConnection? botConnection;
 
   MyAppState({required this.botConnection, required this.objBox});
 
-  String getProvider() {
-    if (objBox.getSetting("provider").isEmpty) {
-      selectedProvider = "None";
-
+  String getAvatar() {
+    String userAvatar;
+    if (objBox.getSettingQuery("avatar").isEmpty) {
+      userAvatar = ActorData.userList()[ActorData.userId]!['image']!;
     } else {
-      selectedProvider = objBox.getSetting("provider")[0].name!;
+      userAvatar = objBox.getSettingQuery("avatar")[0].name!;
+    }
+    return userAvatar;
+  }
 
+  String getName() {
+    String userName;
+    if (objBox.getSettingQuery("username").isEmpty) {
+      userName = ActorData.userList()[ActorData.userId]!['name']!;
+    } else {
+      userName = objBox.getSettingQuery("username")[0].name!;
+    }
+    return userName;
+  }
+
+  String getProvider() {
+    if (objBox.getSettingQuery("provider").isEmpty) {
+      selectedProvider = "None";
+    } else {
+      selectedProvider = objBox.getSettingQuery("provider")[0].name!;
     }
     return selectedProvider;
   }
@@ -134,8 +154,15 @@ class MyAppState extends ChangeNotifier {
   void onProviderChange(String? item) {
     selectedProvider = item!;
     objBox.addSetting(selectedProvider, "provider");
+  }
 
-    // botConnection?.updateBot(item, null);
+  void onAvatarChange(String? item) {
+    objBox.addSetting(item!, "avatar");
+  }
+
+  void onUsernameChange(String? item) {
+    objBox.addSetting(item!, "username");
+    ActorData.userList()[ActorData.userId]!.update('name', (value) => item);
   }
 
   void onItemTapped(index) {

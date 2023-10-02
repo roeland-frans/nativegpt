@@ -1,20 +1,20 @@
 
 class ActorData {
-  static String sysID = 'user00';
-  static String userID = 'user01';
-  static String botID = 'user02';
+  static String sysId = 'user00';
+  static String userId = 'user01';
+  static String botId = 'user02';
 
   static Map<String, Map<String, String?>> userList() => {
-    sysID: {
+    sysId: {
       'name': 'System',
       'type': 'system',
     },
-    userID: {
+    userId: {
       'name': 'Guest',
       'type': 'user',
-      'image': 'https://picsum.photos/250?image=9',
+      'image': null,
     },
-    botID: {
+    botId: {
       'name': 'Chatbot',
       'type': 'bot',
       'image': null,

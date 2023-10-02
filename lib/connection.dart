@@ -27,7 +27,7 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      AppEvent event = AppEvent.connect(ActorData.sysID);
+      AppEvent event = AppEvent.connect(ActorData.sysId);
       final allData = AppUserData.userDataTemp(event.id, 'System', null, 'system');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
@@ -94,7 +94,7 @@ class BotConnection {
   final AppConnection connection;
   final DataStore dataStore;
 
-  final botId = ActorData.userList()[ActorData.botID]!;
+  final botId = ActorData.userList()[ActorData.botId]!;
   ChatOpenAI openai = ChatOpenAI(apiKey: "None");
 
   BotConnection({required this.connection, required this.dataStore});
@@ -121,7 +121,7 @@ class BotConnection {
   Future<void> getBot(AppEvent event) async {
     final text = HumanChatMessage(content: event.data['text']);
     final result = await openai.predictMessages([text]);
-    connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botID),);
+    connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botId),);
   }
 }
 

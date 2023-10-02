@@ -97,7 +97,7 @@ class _SettingsPageState extends State<SettingsPage>{
       case 2:
         return DisplaySettingsWidget();
       default:
-        return GeneralSettingsWidget();
+        return GeneralSettingsWidget(connection: widget.connection, botConnection: widget.botConnection, appState: widget.appState,);
     }
   }
   @override

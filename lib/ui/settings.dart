@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../connection.dart';
-import '../event_emitter.dart';
 import 'package:testtextapp/app.dart';
-import '../objbox.dart';
+import 'package:testtextapp/ui/presence/user_avatar.dart';
+import '../event.dart';
+
 
 
 class AdvancedSettingsWidget extends StatefulWidget {
@@ -248,7 +249,6 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
                         )
                       ),
                       onPressed: () {
-
                       },
                       icon: Icon(Icons.check_box),
                       label: Text("Submit"),
@@ -268,20 +268,128 @@ class _AdvancedSettingsWidgetState extends State<AdvancedSettingsWidget> {
   }
 }
 
-class GeneralSettingsWidget extends StatelessWidget {
+class GeneralSettingsWidget extends StatefulWidget {
+
+  final AppConnection connection;
+  final BotConnection botConnection;
+  final MyAppState appState;
+
+  GeneralSettingsWidget({required this.connection, required this.botConnection, required this.appState});
+
+  @override
+  State<StatefulWidget> createState() => _GeneralSettingsWidgetState();
+}
+
+class _GeneralSettingsWidgetState extends State<GeneralSettingsWidget> {
+
+  final List<DropdownMenuEntry> beans = <DropdownMenuEntry>[];
+  TextEditingController textController = TextEditingController();
+  List<String> items = ["None", "Faiss (local only)"];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text(
-          'Profile settings go here',
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 200,
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(padding: const EdgeInsets.only(bottom: 15),),
+                Container(
+                  padding: const EdgeInsets.only(top: 20, bottom: 10),
+                  child: Text(
+                    "Profile",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                ),
+                Divider(
+                  color: Colors.black
+                ),
+                Row(
+                  children: [
+                    Text("Avatar"),
+                    Padding(padding: const EdgeInsets.only(left: 90, bottom: 60),),
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: ClipRect(
+                        child: Align(
+                          alignment: Alignment.center,
+                          widthFactor: 40,
+                          heightFactor: 40,
+                          child: Image.network('https://picsum.photos/250?image=9'),
+                        ),
+                      ),
+                    ),
+                    Padding(padding: const EdgeInsets.only(right: 20)),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          )
+                        )
+                      ),
+                      onPressed: () {
+                        // _eventEmitter.emit('apiKey', {#apiKey: apiController.text});
+                      },
+                      icon: Icon(Icons.edit),
+                      label: Text("Edit"),
+                      // color: AppThemePalette.themeColorBase,
+                    ),
+                  ],
+                ),
+                Divider(
+                  color: Colors.black
+                ),
+                Row(
+                  children: [
+                    Text("Username"),
+                    Padding(padding: const EdgeInsets.only(left: 68, bottom: 60),),
+                    SizedBox(
+                      width: 250,
+                      height: 50,
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: widget.appState.getName(),
+                          border: OutlineInputBorder(),
+                        ),
+                        controller: textController,
+                      )
+                    ),
+                    Padding(padding: const EdgeInsets.only(right: 20)),
+                    ElevatedButton.icon(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          )
+                        )
+                      ),
+                      onPressed: () {
+                        widget.appState.onUsernameChange(textController.text);
+                      },
+                      icon: Icon(Icons.edit),
+                      label: Text("Edit"),
+                      // color: AppThemePalette.themeColorBase,
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 200,
+          ),
+        ],
+      ),
     );
   }
-
 }
 
 class DisplaySettingsWidget extends StatelessWidget {

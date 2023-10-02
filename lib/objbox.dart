@@ -5,20 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
 import 'objectbox.g.dart'; // created by `flutter pub run build_runner build`
 
-// @Entity()
-// class User {
-//   @Id()
-//   int id = 0;
-//
-//   String? name;
-//
-//   @Property(type: PropertyType.date) // Store as int in milliseconds
-//   DateTime? date;
-//
-//   @Transient() // Ignore this property, not stored in the database.
-//   int? computedProperty;
-// }
-
 @Entity()
 class Setting {
   @Id()
@@ -57,18 +43,14 @@ class ObjectBox {
     _box.put(setting);
   }
 
-  List<Setting> getAllSetting() {
+  List<Setting> getAllSettingQuery() {
     List<Setting> allQuery = _query.find();
     return allQuery;
   }
 
-  List<Setting> getSetting(String uid) {
+  List<Setting> getSettingQuery(String uid) {
     Query<Setting> query = _box.query(Setting_.uid.equals(uid)).build();
     List<Setting> settingQuery = query.find();
-    // print(settingQuery);
-    // for (int i = 0; i < settingQuery.length; i ++) {
-    //   print(settingQuery[i].id);
-    // }
     query.close();
     return settingQuery;
   }
