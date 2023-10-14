@@ -11,11 +11,8 @@ import 'package:testtextapp/storage.dart';
 import '../objbox.dart';
 
 
-
-
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
-
 
   @override
   State<StatefulWidget> createState() => _MyAppState();
@@ -23,6 +20,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final ObjectBox objectBox = objectbox;
+  final ActorData actorData =  ActorData();
+  MyAppState? appState;
   EventStream? eventStream;
   AppConnection? connection;
   BotConnection? botConnection;
@@ -34,13 +33,14 @@ class _MyAppState extends State<MyApp> {
 
   void connect(){
     setState(() {
-      connection = AppConnection();
-      botConnection = BotConnection(connection: connection!, dataStore: DataStore());
+      appState = MyAppState(objBox: objectBox, actorData: actorData);
+      connection = AppConnection(actorData: actorData, appState: appState!);
+      botConnection = BotConnection(connection: connection!, dataStore: DataStore(), actorData: actorData);
       connection!.addOrbListener('connect', onConnect);
       connection!.addOrbListener('event', onEvent);
       connection!.addOrbListener('eventStream', onEventStream);
       connection!.connect();
-      botConnection!.connect('empty');
+      botConnection!.connect();
     });
   }
 
@@ -70,7 +70,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => MyAppState(botConnection: botConnection!, objBox: objectBox),
+      create: (context) => appState,
       child: AppThemeProvider(
         child: AppMaterialProvider(
           eventStream: eventStream,
@@ -116,53 +116,53 @@ class MyAppState extends ChangeNotifier {
   var selectedIndex = 0;
   final ObjectBox objBox;
   var selectedProvider = "None";
-  // var userName = "User";
-  // var userAvatar = null;
-  final BotConnection? botConnection;
+  final ActorData actorData;
 
-  MyAppState({required this.botConnection, required this.objBox});
 
-  String getAvatar() {
-    String userAvatar;
-    if (objBox.getSettingQuery("avatar").isEmpty) {
-      userAvatar = ActorData.userList()[ActorData.userId]!['image']!;
+  MyAppState({required this.objBox, required this.actorData});
+
+  String? getAvatar(String actorId) {
+    String? userAvatar;
+    if (objBox.getSettingQuery("avatar", actorId).isEmpty) {
+      //actorData.userList()[ActorData.userId]!['image']!;
+      userAvatar = null;
     } else {
-      userAvatar = objBox.getSettingQuery("avatar")[0].name!;
+      userAvatar = objBox.getSettingQuery("avatar", actorId)[0].name!;
     }
     return userAvatar;
   }
 
-  String getName() {
+  String getName(String actorId) {
     String userName;
-    if (objBox.getSettingQuery("username").isEmpty) {
-      userName = ActorData.userList()[ActorData.userId]!['name']!;
+    if (objBox.getSettingQuery("username", actorId).isEmpty) {
+      userName = actorData.userList()[ActorData.userId]!['name']!;
     } else {
-      userName = objBox.getSettingQuery("username")[0].name!;
+      userName = objBox.getSettingQuery("username", actorId)[0].name!;
     }
     return userName;
   }
 
   String getProvider() {
-    if (objBox.getSettingQuery("provider").isEmpty) {
+    if (objBox.getSettingQuery("provider", "provID").isEmpty) {
       selectedProvider = "None";
     } else {
-      selectedProvider = objBox.getSettingQuery("provider")[0].name!;
+      selectedProvider = objBox.getSettingQuery("provider", "provID")[0].name!;
     }
     return selectedProvider;
   }
 
   void onProviderChange(String? item) {
     selectedProvider = item!;
-    objBox.addSetting(selectedProvider, "provider");
+    objBox.addSetting(selectedProvider, "provider", "provID");
   }
 
   void onAvatarChange(String? item) {
-    objBox.addSetting(item!, "avatar");
+    objBox.addSetting(item!, "avatar", "user01");
   }
 
   void onUsernameChange(String? item) {
-    objBox.addSetting(item!, "username");
-    ActorData.userList()[ActorData.userId]!.update('name', (value) => item);
+    objBox.addSetting(item!, "username", "user01");
+    actorData.userList()[ActorData.userId]!.update('name', (value) => item);
   }
 
   void onItemTapped(index) {

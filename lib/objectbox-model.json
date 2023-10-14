@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "2:2602928623001098342",
-      "lastPropertyId": "4:6983793548300162198",
+      "lastPropertyId": "7:5418327162175170078",
       "name": "Setting",
       "properties": [
         {
@@ -25,18 +25,23 @@
           "type": 10
         },
         {
-          "id": "4:6983793548300162198",
-          "name": "uid",
+          "id": "6:473445193659551548",
+          "name": "actorid",
+          "type": 9
+        },
+        {
+          "id": "7:5418327162175170078",
+          "name": "settingtype",
           "type": 9,
           "flags": 2048,
-          "indexId": "1:3455916316253125218"
+          "indexId": "3:205377916110312737"
         }
       ],
       "relations": []
     }
   ],
   "lastEntityId": "2:2602928623001098342",
-  "lastIndexId": "1:3455916316253125218",
+  "lastIndexId": "3:205377916110312737",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
@@ -44,11 +49,16 @@
   "retiredEntityUids": [
     9167108700782199514
   ],
-  "retiredIndexUids": [],
+  "retiredIndexUids": [
+    3455916316253125218,
+    3070022662524050860
+  ],
   "retiredPropertyUids": [
     2202062628206954222,
     1842812579451368979,
-    3712438668983223522
+    3712438668983223522,
+    6983793548300162198,
+    1622827267685112686
   ],
   "retiredRelationUids": [],
   "version": 1

@@ -22,25 +22,25 @@ class BuildAvatar extends StatelessWidget {
     } else {
       final monogram = (userData.avatar?.monogram ?? 'P');
       return Container(
-          width: 40,
-          height: 40,
-          decoration: BoxDecoration(
-            color: AppThemePalette.themeColorAccent,
-            borderRadius: BorderRadius.circular(40),
-          ),
-          child: Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(monogram),
-                  BotSemicircle(
-                    radius: 40,
-                    color: AppThemePalette.themeColorSecondary,
-                  ),
-                ],
-              )
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: AppThemePalette.themeColorAccent,
+          borderRadius: BorderRadius.circular(40),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(monogram),
+              BotSemicircle(
+                radius: 40,
+                color: AppThemePalette.themeColorSecondary,
+              ),
+            ],
           )
+        )
       );
     }
   }

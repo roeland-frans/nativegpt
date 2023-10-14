@@ -11,9 +11,10 @@ class Setting {
   int id = 0;
 
   @Index()
-  String uid = "";
+  String settingtype = "";
 
   String? name;
+  String? actorid;
 
   @Property(type: PropertyType.date) // Store as int in milliseconds
   DateTime? date;
@@ -32,13 +33,14 @@ class ObjectBox {
 
   ObjectBox._create(this.store) {
     _box = store.box<Setting>();
-    _query = _box.query().order(Setting_.uid, flags: Order.descending).build();
+    _query = _box.query().order(Setting_.settingtype, flags: Order.descending).build();
   }
 
-  void addSetting(String name, String uid) {
+  void addSetting(String name, String uid, String actorId) {
     final setting = Setting();
     setting.name = name;
-    setting.uid = uid;
+    setting.settingtype = uid;
+    setting.actorid = actorId;
     removeSetting(uid);
     _box.put(setting);
   }
@@ -48,15 +50,16 @@ class ObjectBox {
     return allQuery;
   }
 
-  List<Setting> getSettingQuery(String uid) {
-    Query<Setting> query = _box.query(Setting_.uid.equals(uid)).build();
+  List<Setting> getSettingQuery(String uid, String actorId) {
+    Query<Setting> query = _box.query(Setting_.settingtype.equals(uid).and(Setting_.actorid.equals(actorId))).build();
     List<Setting> settingQuery = query.find();
+    // print(settingQuery);
     query.close();
     return settingQuery;
   }
 
   void removeSetting(String uid) {
-    Query<Setting> query = _box.query(Setting_.uid.equals(uid)).build();
+    Query<Setting> query = _box.query(Setting_.settingtype.equals(uid)).build();
     query.remove();
     query.close();
   }

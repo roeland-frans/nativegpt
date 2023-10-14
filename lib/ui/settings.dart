@@ -356,7 +356,7 @@ class _GeneralSettingsWidgetState extends State<GeneralSettingsWidget> {
                       height: 50,
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: widget.appState.getName(),
+                          hintText: widget.appState.getName("user01"),
                           border: OutlineInputBorder(),
                         ),
                         controller: textController,
