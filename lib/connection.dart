@@ -50,8 +50,6 @@ class AppConnection {
 
   void publishEvent(AppEvent event){
     final userData = actorData.userList()[event.id];
-    //userData?['image']
-    //userData!['name']![0]
     final avatarData = AppAvatar(image: appState.getAvatar(event.id!), crop: AppAvatarCrop.circle, monogram: appState.getName(event.id!)[0]);
     print("yes");
     final allData = AppUserData.userDataTemp(event.id, appState.getName(event.id!), avatarData, userData!['type']);
