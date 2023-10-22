@@ -38,9 +38,38 @@
         }
       ],
       "relations": []
+    },
+    {
+      "id": "3:161734766342482119",
+      "lastPropertyId": "4:8688836144698419234",
+      "name": "Message",
+      "properties": [
+        {
+          "id": "1:2832304365573068625",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6397328274576773081",
+          "name": "user",
+          "type": 9
+        },
+        {
+          "id": "3:7281543256089955635",
+          "name": "content",
+          "type": 9
+        },
+        {
+          "id": "4:8688836144698419234",
+          "name": "date",
+          "type": 10
+        }
+      ],
+      "relations": []
     }
   ],
-  "lastEntityId": "2:2602928623001098342",
+  "lastEntityId": "3:161734766342482119",
   "lastIndexId": "3:205377916110312737",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",

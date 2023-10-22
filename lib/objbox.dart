@@ -23,17 +23,35 @@ class Setting {
   int? computedProperty;
 }
 
+@Entity()
+class Message {
+  @Id()
+  int id = 0;
+
+  String? user;
+  String? content;
+
+  @Property(type: PropertyType.date) // Store as int in milliseconds
+  DateTime? date;
+
+  @Transient() // Ignore this property, not stored in the database.
+  int? computedProperty;
+}
+
 class ObjectBox {
   /// The Store of this app.
   final Store store;
   // late final ObjControl objControl = ObjControl();
-  late final Box<Setting> _box;
-  late final Query<Setting> _query;
-
+  late final Box<Setting> _sbox;
+  late final Box<Message> _mbox;
+  late final Query<Setting> _squery;
+  late final Query<Message> _mquery;
 
   ObjectBox._create(this.store) {
-    _box = store.box<Setting>();
-    _query = _box.query().order(Setting_.settingtype, flags: Order.descending).build();
+    _sbox = store.box<Setting>();
+    _mbox = store.box<Message>();
+    _squery = _sbox.query().order(Setting_.settingtype, flags: Order.descending).build();
+    _mquery = _mbox.query().order(Message_.date, flags: Order.descending).build();
   }
 
   void addSetting(String name, String uid, String actorId) {
@@ -42,16 +60,22 @@ class ObjectBox {
     setting.settingtype = uid;
     setting.actorid = actorId;
     removeSetting(uid);
-    _box.put(setting);
+    _sbox.put(setting);
+  }
+
+  void addMessage(String senderID, String contents) {
+    final message = Message();
+    message.user = senderID;
+    message.content = contents;
   }
 
   List<Setting> getAllSettingQuery() {
-    List<Setting> allQuery = _query.find();
+    List<Setting> allQuery = _squery.find();
     return allQuery;
   }
 
   List<Setting> getSettingQuery(String uid, String actorId) {
-    Query<Setting> query = _box.query(Setting_.settingtype.equals(uid).and(Setting_.actorid.equals(actorId))).build();
+    Query<Setting> query = _sbox.query(Setting_.settingtype.equals(uid).and(Setting_.actorid.equals(actorId))).build();
     List<Setting> settingQuery = query.find();
     // print(settingQuery);
     query.close();
@@ -59,7 +83,7 @@ class ObjectBox {
   }
 
   void removeSetting(String uid) {
-    Query<Setting> query = _box.query(Setting_.settingtype.equals(uid)).build();
+    Query<Setting> query = _sbox.query(Setting_.settingtype.equals(uid)).build();
     query.remove();
     query.close();
   }

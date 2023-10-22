@@ -38,9 +38,9 @@ class AppEvent implements Comparable<AppEvent>{
     );
   }
 
-  factory AppEvent.textMessage(String text, String userID) {
+  factory AppEvent.textMessage(String text, String senderID) {
     return AppEvent(
-      id: userID,
+      id: senderID,
       type: 'nativegpt.event.textMessage',
       data: {
         'text': text,
