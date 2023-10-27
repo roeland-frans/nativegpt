@@ -4,11 +4,13 @@
 *.pyc
 *.swp
 .DS_Store
+.mdb
 .atom/
 .buildlog/
 .history
 .svn/
 migrate_working_dir/
+objectbox.g.dart
 
 # IntelliJ related
 *.iml

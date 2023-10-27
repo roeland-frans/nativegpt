@@ -1,23 +1,26 @@
-class ActorData {
-  static String sysID = 'user00';
-  static String userID = 'user01';
-  static String botID = 'user02';
 
-  static String userName = 'TestName';
-  static Map<String, Map<String, String?>> userList() => {
-    sysID: {
+import 'app.dart';
+
+class ActorData {
+  static String sysId = 'user00';
+  static String userId = 'user01';
+  static String botId = 'user02';
+
+  // final MyAppState appState;
+  // ActorData({required this.appState});
+
+  Map<String, Map<String, String?>> userList() => {
+    sysId: {
       'name': 'System',
       'type': 'system',
     },
-    userID: {
+    userId: {
       'name': 'Guest',
       'type': 'user',
-      'image': 'https://picsum.photos/250?image=9',
+      'image': null,
     },
-    botID: {
+    botId: {
       'name': 'Chatbot',
-      'model': 'gpt-3.5-turbo',
-      'key': '[INSERT API KEY HERE]',
       'type': 'bot',
       'image': null,
     },

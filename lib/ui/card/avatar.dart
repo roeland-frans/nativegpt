@@ -1,6 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:testtextapp/ui/presence/user_avatar.dart';
-import 'package:testtextapp/ui/theme.dart';
 
 enum AppAvatarCrop { circle, square }
 

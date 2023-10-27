@@ -3,11 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:testtextapp/event_stream.dart';
 import 'package:testtextapp/connection.dart';
 import 'package:testtextapp/ui/theme.dart';
-
 import '../actordata.dart';
-import '../app.dart';
 import '../event.dart';
-import 'history.dart';
 
 enum _AppComposerMode { text, extra, image }
 
@@ -80,7 +77,7 @@ class _AppTextModeState extends State<_AppTextMode> {
                 onFieldSubmitted: (_) async {
                   widget.connection.publishEvent(
                     AppEvent.textMessage(
-                        widget.myController.text, ActorData.userID
+                        widget.myController.text, ActorData.userId
                     ),
                   );
                   widget.myController.clear();
@@ -95,7 +92,7 @@ class _AppTextModeState extends State<_AppTextMode> {
                 if (keyEvent.logicalKey == LogicalKeyboardKey.tab){
                   widget.connection.publishEvent(
                     AppEvent.textMessage(
-                        widget.myController.text, ActorData.userID
+                        widget.myController.text, ActorData.userId
                     ),
                   );
                   widget.myController.clear();
@@ -143,9 +140,8 @@ class _AppSendTextButton extends StatelessWidget {
           )
       ),
       onPressed: () {
-        connection.publishEvent(AppEvent.textMessage(textEditingController.text, ActorData.userID));
+        connection.publishEvent(AppEvent.textMessage(textEditingController.text, ActorData.userId));
         textEditingController.clear();
-        // connection.publishEvent(AppEvent.textMessage('test response', ActorData.botID));
         composerFocusNode.unfocus();
       },
       label: Text('Send'),

@@ -1,17 +1,21 @@
-import 'dart:collection';
-import 'dart:io';
 import 'package:testtextapp/event.dart';
-import 'package:testtextapp/event.dart';
+import 'package:testtextapp/app.dart';
 import 'package:testtextapp/event_stream.dart';
+import 'package:testtextapp/storage.dart';
 import 'package:testtextapp/event_emitter.dart';
 import 'package:testtextapp/ui/card/avatar.dart';
 import 'package:testtextapp/actordata.dart';
 import 'package:langchain/langchain.dart';
 import 'package:langchain_openai/langchain_openai.dart';
 
+
 class AppConnection {
   final EventEmitter _eventEmitter = EventEmitter();
   EventStream _eventStream = EventStream();
+  final MyAppState appState;
+  final ActorData actorData;
+
+  AppConnection({required this.actorData, required this.appState});
 
   bool firstConnect = true;
 
@@ -23,7 +27,7 @@ class AppConnection {
 
   void connect() {
     if (firstConnect) {
-      AppEvent event = AppEvent.connect(ActorData.sysID);
+      AppEvent event = AppEvent.connect(ActorData.sysId);
       final allData = AppUserData.userDataTemp(event.id, 'System', null, 'system');
       final userdata = (allData
       as Map<dynamic, dynamic>? ??
@@ -45,9 +49,10 @@ class AppConnection {
   }
 
   void publishEvent(AppEvent event){
-    final actorData = ActorData.userList()[event.id];
-    final avatarData = AppAvatar(image: actorData?['image'], crop: AppAvatarCrop.circle, monogram: actorData!['name']![0]);
-    final allData = AppUserData.userDataTemp(event.id, actorData['name'], avatarData, actorData['type']);
+    final userData = actorData.userList()[event.id];
+    final avatarData = AppAvatar(image: appState.getAvatar(event.id!), crop: AppAvatarCrop.circle, monogram: appState.getName(event.id!)[0]);
+    print("yes");
+    final allData = AppUserData.userDataTemp(event.id, appState.getName(event.id!), avatarData, userData!['type']);
 
     final userdata = (allData
     as Map<dynamic, dynamic>? ??
@@ -85,22 +90,59 @@ class AppConnection {
   }
 }
 
-class WebsocketConnection {
+class BotConnection {
 
   final AppConnection connection;
-  ChatOpenAI openai = ChatOpenAI(apiKey: 'empty');
+  final DataStore dataStore;
+  final ActorData actorData;
 
-  WebsocketConnection({required this.connection});
+  BotConnection({required this.connection, required this.dataStore, required this.actorData, });
 
-  void connect() {
-    final botid = ActorData.userList()[ActorData.botID]!;
-    openai = ChatOpenAI(apiKey: botid['key'], model: botid['model'] ?? "gpt-3.5-turbo");
+  // final botId = actorData.userList()[ActorData.botId]!;
+  ChatOpenAI openai = ChatOpenAI(apiKey: "None");
+  final memory = ConversationBufferMemory(returnMessages: true);
+  late ConversationChain conversation;
+  // late LLMChain chain;
+  // final history = ChatMessageHistory();
+
+  Future<void> connect() async {
+    await dataStore.readItem("apiKey");
+    openai = ChatOpenAI(apiKey: dataStore.apikey);
+    final memory = ConversationBufferMemory(returnMessages: true);
+    // final botPrompt = SystemChatMessagePromptTemplate.fromTemplate("hi");
+    // final humanPrompt = HumanChatMessagePromptTemplate.fromTemplate('{text}');
+    // final chatPrompt = ChatPromptTemplate.fromPromptMessages([botPrompt,humanPrompt]);
+    // chain = LLMChain(llm: openai, prompt: chatPrompt);
+    conversation = ConversationChain(
+      llm: openai,
+      memory: memory,
+    );
+    // final result = await conversation.run('Hello');
+    // print(result);
+  }
+  // , model: 'gpt-3.5-turbo'
+
+  void updateBot(String? model, String? apiKey) {
+    openai = ChatOpenAI(apiKey: apiKey ?? dataStore.apikey, model: 'gpt-3.5-turbo');
+    if (apiKey != null) {
+      dataStore.deleteItem("apiKey");
+      dataStore.addItem("apiKey", apiKey);
+    }
+  }
+
+  void updateKey(String apiKey) {
+    openai = ChatOpenAI(apiKey: apiKey, model: 'gpt-3.5-turbo');
+    dataStore.deleteItem("apiKey");
+    dataStore.addItem("apiKey", apiKey);
   }
 
   Future<void> getBot(AppEvent event) async {
     final text = HumanChatMessage(content: event.data['text']);
-    final result = await openai.predictMessages([text]);
-    connection.publishEvent(AppEvent.textMessage(result.content, ActorData.botID),);
+    final result = await conversation.run([text]);
+    final trimmedRes = result.substring(26, result.length - 44);
+    // print(result.substring(26, result.length - 44));
+    // final result = await openai.predictMessages([text]);
+    connection.publishEvent(AppEvent.textMessage(trimmedRes, ActorData.botId),);
   }
 }
 
